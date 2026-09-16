@@ -11,7 +11,7 @@
 ## 本地预览
 
 ```powershell
-Set-Location 'E:\2026实习\7.23研报skill抽取\portfolio-prototype'
+Set-Location .\portfolio-prototype
 D:\python\python.exe -m http.server 4173
 ```
 
