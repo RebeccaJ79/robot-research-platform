@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "publication_id": "sample-20260915",
+  "publications": [
+    {"id": "daily-20260612", "type": "daily", "title": "每日关注", "period": "2026-06-12", "summary": "执行器与减速器活跃，量产传导仍待确认。"},
+    {"id": "weekly-2026w24", "type": "weekly", "title": "周报", "period": "2026年第24周", "summary": "零部件表现扩散，关注控制系统与整机协同。"},
+    {"id": "monthly-202606", "type": "monthly", "title": "月报", "period": "2026年6月", "summary": "材料至整机构成观察链，商业化兑现仍有缺口。"}
+  ],
+  "graph": {"nodes": [], "relations": []},
+  "cases": [{"publication_id": "sample-20260915", "模型审核": "通过", "程序校验": "通过", "自动修复": 0, "发布状态": "已发布"}]
+}
