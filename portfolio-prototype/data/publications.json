@@ -962,70 +962,70 @@
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "positive_breadth": 0.3492723493,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260821",
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "positive_breadth": 0.8004158004,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260818",
               "node_id": "U02",
               "node_name": "运动执行与传动系统",
               "positive_breadth": 0.5481397687,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260821",
               "node_id": "U02",
               "node_name": "运动执行与传动系统",
               "positive_breadth": 0.5784273504,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260818",
               "node_id": "U03",
               "node_name": "感知与传感系统",
               "positive_breadth": 0.2966101695,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260821",
               "node_id": "U03",
               "node_name": "感知与传感系统",
               "positive_breadth": 0.39548022600000005,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260818",
               "node_id": "U04",
               "node_name": "控制与计算硬件",
               "positive_breadth": 0.3186077644,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260821",
               "node_id": "U04",
               "node_name": "控制与计算硬件",
               "positive_breadth": 0.3560910308,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260818",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
               "positive_breadth": 0.25,
-              "node_return_change": NaN
+              "node_return_change": null
             },
             {
               "trade_date": "20260821",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
               "positive_breadth": 0.5,
-              "node_return_change": NaN
+              "node_return_change": null
             }
           ]
         },
@@ -2663,5 +2663,13 @@
     ],
     "updated_node_ids": []
   },
-  "cases": []
+  "cases": [
+    {
+      "publication_id": "release-20260916-local-current",
+      "模型审核": "通过",
+      "程序校验": "通过",
+      "自动修复": 0,
+      "发布状态": "已发布"
+    }
+  ]
 }
