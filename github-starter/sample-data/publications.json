@@ -1,0 +1,1 @@
+{"schema_version":"1.0","publications":[{"id":"daily-sample","type":"daily","title":"每日关注","summary":"样例公开结论。"}],"graph":{"nodes":[],"relations":[]},"cases":[{"模型审核":"通过","程序校验":"通过","自动修复":0,"发布状态":"已发布"}]}
