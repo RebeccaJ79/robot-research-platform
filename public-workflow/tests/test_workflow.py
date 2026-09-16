@@ -33,3 +33,35 @@ def test_online_mode_requires_a_user_supplied_key(tmp_path: Path, monkeypatch) -
         assert str(error) == "MODEL_API_KEY_REQUIRED"
     else:
         raise AssertionError("online execution accepted no user key")
+
+
+def test_online_mode_sends_the_user_key_to_their_configured_endpoint_only(tmp_path: Path, monkeypatch) -> None:
+    from workflow import run
+
+    source = tmp_path / "input.json"; source.write_text('{"period":"2026-09-15","items":[]}', encoding="utf-8")
+    seen: dict[str, object] = {}
+
+    class Response:
+        def read(self) -> bytes:
+            return b'{"choices":[{"message":{"content":"{\\\"schema_version\\\":\\\"1.0\\\",\\\"publications\\\":[],\\\"graph\\\":{\\\"nodes\\\":[],\\\"relations\\\":[]},\\\"cases\\\":[]}"}}]}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            return None
+
+    def fake_urlopen(request, timeout: int):
+        seen["url"] = request.full_url
+        seen["authorization"] = request.get_header("Authorization")
+        seen["timeout"] = timeout
+        return Response()
+
+    monkeypatch.setenv("MODEL_API_KEY", "user-owned-key")
+    monkeypatch.setenv("MODEL_BASE_URL", "https://model.example/v1")
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+
+    target = run(source, tmp_path / "output.json", offline=False)
+
+    assert seen == {"url": "https://model.example/v1/chat/completions", "authorization": "Bearer user-owned-key", "timeout": 60}
+    assert json.loads(target.read_text(encoding="utf-8"))["schema_version"] == "1.0"

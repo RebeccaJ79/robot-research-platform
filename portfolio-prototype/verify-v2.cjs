@@ -6,6 +6,14 @@ const context={document:{getElementById(id){if(!elements.has(id))elements.set(id
 vm.createContext(context);vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],context);
 const run=s=>vm.runInContext(s,context);
 assert.equal(run('nodes.length'),23);
+const published=run(`derivePublishedGraph({nodes:[
+ {id:'U01',name:'材料',stream:'U',level:1},
+ {id:'U01-01',name:'稀土磁材',stream:'U',level:2,parent_id:'U01'},
+ {id:'M01',name:'伺服电机',stream:'M',level:1}
+],relations:[{source_node_id:'U01-01',target_node_id:'M01'}]})`);
+assert.equal(published.groups.length,2);
+assert.equal(published.groups[0][1][0][1][0],'稀土磁材');
+assert.deepEqual(Array.from(published.edges[0]),['稀土磁材','伺服电机']);
 for(const tab of ['daily','weekly','monthly','graph']){
  run(`chooseTab('${tab}')`);assert.equal((elements.get('graph').innerHTML.match(/data-node=/g)||[]).length,23);
  assert.equal(elements.get('chartSection').hidden,tab==='graph');
