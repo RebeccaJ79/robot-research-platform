@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Private research and generated local state
+*.pdf
+*.sqlite3
+*.sqlite3-journal
+*.jsonl
+tmp/
+logs/
+hermes_skill_output/
+robot_evidence_pipeline/
+public-workflow/output/
