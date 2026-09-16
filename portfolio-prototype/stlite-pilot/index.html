@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>机器人产业研究台 · stlite 验证</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/browser@0.76.0/build/stlite.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    import { mount } from "https://cdn.jsdelivr.net/npm/@stlite/browser@0.76.0/build/stlite.js";
+    const [app, snapshot] = await Promise.all([
+      fetch("./app.py").then(response => response.text()),
+      fetch("../data/publications.json").then(response => response.text()),
+    ]);
+    mount(
+      {
+        entrypoint: "app.py",
+        files: { "app.py": app, "data/publications.json": snapshot },
+      },
+      document.getElementById("root"),
+    );
+  </script>
+</body>
+</html>
