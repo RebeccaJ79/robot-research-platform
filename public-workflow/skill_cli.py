@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile
 
-from evidence_pipeline import EvidenceBundle, build_evidence_bundle, validate_evidence_backed_updates
-from skill_package import apply_updates, initialize_state, validate_skill_tree
+from evidence_pipeline import EvidenceBundle, attach_evidence_locations, build_evidence_bundle, validate_evidence_backed_updates
+from skill_package import apply_updates, initialize_state, load_skill_context, validate_skill_tree
 
 
 def run(
@@ -46,6 +46,12 @@ def run(
     return output_zip
 
 
+def fresh_pdf_paths(pdf_paths: list[Path], state_dir: Path) -> list[Path]:
+    """Avoid a model request when every supplied PDF is already incorporated."""
+    processed = _read_processed(Path(state_dir) / "processed.json")
+    return [Path(path) for path in pdf_paths if _fingerprint(Path(path)) not in processed]
+
+
 def extract_pdf_text(pdf_path: Path) -> str:
     """Extract meaningful native text without uploading a caller's PDF."""
     try:
@@ -63,37 +69,73 @@ def extract_pdf_text(pdf_path: Path) -> str:
     return text
 
 
-def request_updates(evidence: EvidenceBundle) -> list[dict[str, Any]]:
+def request_updates(evidence: EvidenceBundle, current_context: list[dict[str, Any]] | None = None) -> list[dict[str, Any]]:
     """Ask only the caller-selected endpoint for public registry operations."""
-    key = os.environ.get("MODEL_API_KEY")
-    base = os.environ.get("MODEL_BASE_URL", "").rstrip("/")
+    key = os.environ.get("MODEL_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+    base = (os.environ.get("MODEL_BASE_URL") or os.environ.get("DEEPSEEK_BASE_URL") or "https://api.deepseek.com/v1").rstrip("/")
     if not key:
         raise RuntimeError("MODEL_API_KEY_REQUIRED")
     if not base:
         raise RuntimeError("MODEL_BASE_URL_REQUIRED")
     request_body = {
-        "model": os.environ.get("MODEL_NAME", "gpt-4o-mini"),
+        "model": os.environ.get("MODEL_NAME") or os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat",
         "response_format": {"type": "json_object"},
         "messages": [{
             "role": "system",
-            "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Every operation must include a non-empty evidence_ids array containing only supplied evidence IDs. Never return credentials, local paths, PDF quotations, raw model reasoning, or a new parent ID.",
-        }, {"role": "user", "content": json.dumps({"evidence": evidence.model_payload()}, ensure_ascii=False)}],
+            "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Each update is {parent_id, operations}. operation MUST be exactly one of add_dimension, replace_dimension, add_indicator, add_rule, replace_rule, add_research_model, replace_indicator, replace_research_model, add_alias, merge_dimension, deprecate_dimension. For a new method use add_dimension with dimension:{id,name}, indicators:[], rules:[], research_models:[]; for a later addition use add_indicator with dimension_id and indicator:{id,name}. Do not invent operation names, wrapper fields, parent IDs, IDs not present in current_skill_context, or existing children. Every operation must include a non-empty evidence array of {evidence_id, quote}; quote must be an exact short substring of that evidence (max 180 characters). Never return credentials, local paths, long PDF quotations, raw model reasoning, or a new parent ID.",
+        }, {"role": "user", "content": json.dumps({"evidence": evidence.model_payload(), "current_skill_context": current_context or []}, ensure_ascii=False)}],
     }
-    request = urllib.request.Request(
-        f"{base}/chat/completions",
-        data=json.dumps(request_body).encode("utf-8"),
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        payload = json.loads(response.read().decode("utf-8"))
+    payload = _model_completion(base, key, request_body)
     try:
         updates = json.loads(payload["choices"][0]["message"]["content"])["updates"]
     except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
         raise RuntimeError("MODEL_OUTPUT_INVALID") from error
     if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
         raise RuntimeError("MODEL_OUTPUT_INVALID")
-    validate_evidence_backed_updates(updates, evidence.evidence_ids)
-    return updates
+    validated = attach_evidence_locations(updates, evidence)
+    review_updates(validated, evidence, base=base, key=key)
+    return validated
+
+
+def review_updates(updates: list[dict[str, Any]], evidence: EvidenceBundle, *, base: str, key: str) -> None:
+    """Reject model changes that a second evidence-focused review cannot support."""
+    operations = [operation for update in updates for operation in update["operations"]]
+    review_body = {
+        "model": os.environ.get("MODEL_NAME") or os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat",
+        "response_format": {"type": "json_object"},
+        "messages": [{
+            "role": "system",
+            "content": "You are a strict evidence reviewer. Return JSON only: {\"approved\":[true,...]}. There must be exactly one boolean per supplied operation. Approve only if its short cited quote directly supports the proposed method update; reject speculation, a quote that does not support the operation, or a change outside the six fixed robot-industry parents.",
+        }, {
+            "role": "user",
+            "content": json.dumps({"operations": operations, "evidence": evidence.model_payload()}, ensure_ascii=False),
+        }],
+    }
+    payload = _model_completion(base, key, review_body)
+    try:
+        approved = json.loads(payload["choices"][0]["message"]["content"])["approved"]
+    except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+        raise RuntimeError("MODEL_REVIEW_INVALID") from error
+    if not isinstance(approved, list) or len(approved) != len(operations) or not all(isinstance(value, bool) for value in approved):
+        raise RuntimeError("MODEL_REVIEW_INVALID")
+    if not all(approved):
+        raise RuntimeError("MODEL_SEMANTIC_REVIEW_REJECTED")
+
+
+def _model_completion(base: str, key: str, body: dict[str, Any]) -> dict[str, Any]:
+    request = urllib.request.Request(
+        f"{base}/chat/completions",
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError("MODEL_REQUEST_FAILED") from error
+    if not isinstance(payload, dict):
+        raise RuntimeError("MODEL_OUTPUT_INVALID")
+    return payload
 
 
 def _fingerprint(path: Path) -> str:
@@ -138,14 +180,15 @@ def main() -> None:
     parser.add_argument("--offline-updates", type=Path)
     parser.add_argument("--ocr", choices=("auto", "off", "force"), default="auto")
     args = parser.parse_args()
-    bundle = build_evidence_bundle(args.pdf, args.state, ocr_mode=args.ocr)
+    fresh = fresh_pdf_paths(args.pdf, args.state)
+    bundle = build_evidence_bundle(fresh, args.state, ocr_mode=args.ocr) if fresh else EvidenceBundle(documents=[], evidence=[])
     if args.offline_updates:
         payload = json.loads(args.offline_updates.read_text(encoding="utf-8"))
         updates = payload.get("updates") if isinstance(payload, dict) else None
         if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
             raise RuntimeError("OFFLINE_UPDATES_INVALID")
     else:
-        updates = request_updates(bundle)
+        updates = request_updates(bundle, load_skill_context(args.state)) if fresh else []
     # Evidence preparation above has already validated native extraction or local OCR.
     # Avoid a second native-only extraction that would reject a successfully OCRed PDF.
     print(run(args.pdf, args.state, args.output, updates, text_extractor=lambda _path: "prepared local evidence"))

@@ -133,6 +133,21 @@ def test_batch_of_two_pdfs_produces_one_zip_with_fixed_parent_package(tmp_path: 
         ]
 
 
+def test_cited_operation_exports_page_reference_without_pdf_or_path(tmp_path: Path) -> None:
+    from skill_cli import run
+
+    source = tmp_path / "report.pdf"
+    source.write_bytes(b"source")
+    run([source], tmp_path / "state", tmp_path / "skill.zip", [{"parent_id": "market-demand", "operations": [{
+        "operation": "add_dimension", "dimension": {"id": "demand", "name": "需求"},
+        "indicators": [], "rules": [], "research_models": [],
+        "evidence": [{"evidence_id": "ev-public", "page": 2, "quote": "订单增长"}],
+    }]}], text_extractor=lambda _: "prepared")
+
+    traceability = json.loads((tmp_path / "state" / "current" / "skills" / "市场需求与应用空间" / "references" / "source-traceability.yaml").read_text(encoding="utf-8"))
+    assert traceability["fact_lineage"] == [{"operation": "add_dimension", "evidence": [{"evidence_id": "ev-public", "page": 2, "quote": "订单增长"}]}]
+
+
 def test_repeated_pdf_does_not_create_a_new_version(tmp_path: Path) -> None:
     """Fingerprint deduplication prevents a repeated upload from changing the library."""
     from skill_cli import run

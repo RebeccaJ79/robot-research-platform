@@ -14,6 +14,15 @@
 python -m pip install -r requirements.txt
 ```
 
+启动本地网页工作台：
+
+```powershell
+# 已在 PowerShell 配置 DeepSeek 时无需重复设置密钥
+streamlit run local_workbench.py
+```
+
+浏览器会打开本地地址。上传的 PDF 只交给本机程序处理；本地工作台复用下方同一套命令行生成核心。
+
 OCR 仅在本机执行。除 Python 依赖外，请安装 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) 并确保 `tesseract` 在 `PATH` 中；默认语言为简体中文和英文（`chi_sim+eng`）。
 
 使用用户自己的 PDF 和离线样例更新运行：
@@ -22,7 +31,7 @@ OCR 仅在本机执行。除 Python 依赖外，请安装 [Tesseract OCR](https:
 python skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
 ```
 
-不提供 `--offline-updates` 时，程序读取 `MODEL_API_KEY`、`MODEL_BASE_URL` 和可选的 `MODEL_NAME`，调用使用者配置的 OpenAI 兼容端点。请在当前命令行会话或操作系统环境变量中设置真实值；`.env.example` 仅为变量名模板，程序不会自动读取 `.env` 文件。模型费用由使用者承担。
+不提供 `--offline-updates` 时，程序优先读取 `MODEL_API_KEY`、`MODEL_BASE_URL` 和可选的 `MODEL_NAME`，也兼容 DeepSeek 的 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL` 和 `DEEPSEEK_MODEL`。它调用使用者配置的 OpenAI 兼容端点；`.env.example` 仅为变量名模板，程序不会自动读取 `.env` 文件。模型费用由使用者承担。
 
 PowerShell 示例：
 
@@ -33,11 +42,18 @@ $env:MODEL_NAME = "你的模型名称"
 python skill_cli.py --pdf .\report-a.pdf --state .\local-state --output .\skill-package.zip
 ```
 
+已配置 DeepSeek 的 PowerShell 可直接运行网页工作台或上述命令。若只设置了密钥，默认使用 `https://api.deepseek.com/v1` 与 `deepseek-chat`：
+
+```powershell
+$env:DEEPSEEK_API_KEY = "你的 DeepSeek 密钥"
+streamlit run local_workbench.py
+```
+
 `--ocr auto` 为默认值：先提取 PDF 原生文本，空文本时在本机 OCR；`--ocr force` 始终 OCR；`--ocr off` 禁止 OCR 并在扫描件上失败。
 
-模型只收到清洗后的带页码 evidence 片段，而非 PDF 文件。模型返回的每一项更新操作都必须引用现有 `evidence_ids`；未知、缺失或空引用会在写入 Skill 前被拒绝。
+模型只收到清洗后的带页码 evidence 片段，而非 PDF 文件。模型返回的每一项更新操作都必须引用现有 `evidence_id` 和不超过 180 字的原文短引；程序核验短引确实出现在对应页码证据中，再要求模型按同一证据逐项语义复核。任何未知、缺失、无效或未通过复核的更新都会在写入 Skill 前被拒绝。
 
-ZIP 只包含 `SKILL.md`、`contract.json` 和 `references/` 下的通用方法文件。PDF 原件、解析文本、指纹、路径、密钥、模型回复和临时状态不写入 ZIP。
+ZIP 只包含 `SKILL.md`、`contract.json` 和 `references/` 下的通用方法文件；其中的来源追溯仅保留证据 ID、页码和短引。PDF 原件、解析文本、文档指纹、路径、密钥、模型回复和临时状态不写入 ZIP。
 
 ## 真实端点 smoke test
 
@@ -50,8 +66,9 @@ ZIP 只包含 `SKILL.md`、`contract.json` 和 `references/` 下的通用方法�
 | `PDF_TEXT_EXTRACTION_EMPTY` | PDF 没有原生文本且使用了 `--ocr off`；改用默认 `--ocr auto`。 |
 | `OCR_DEPENDENCIES_REQUIRED` | 未安装 `PyMuPDF` 或 `pytesseract`；重新执行依赖安装。 |
 | `TESSERACT_REQUIRED` | 未安装 Tesseract 或未加入 `PATH`；安装后重新打开命令行。 |
-| `EVIDENCE_CITATION_REQUIRED` / `EVIDENCE_CITATION_UNKNOWN` | 模型没有为每项操作提供有效 evidence ID；检查模型是否支持 JSON 输出，或更换模型/提示配置。 |
-| `MODEL_*_REQUIRED` / `MODEL_OUTPUT_INVALID` | 检查当前命令行环境变量、OpenAI 兼容 `/chat/completions` 地址和模型 JSON 输出能力。 |
+| `EVIDENCE_CITATION_REQUIRED` / `EVIDENCE_CITATION_UNKNOWN` / `EVIDENCE_QUOTE_INVALID` | 模型没有为每项操作提供有效 evidence ID 或逐字短引；检查模型是否支持 JSON 输出。 |
+| `MODEL_SEMANTIC_REVIEW_REJECTED` | 第二次模型复核认为引文不足以支持该方法更新；保留原 Skill，换更具体的 PDF 或重新运行。 |
+| `MODEL_*_REQUIRED` / `MODEL_OUTPUT_INVALID` / `MODEL_REQUEST_FAILED` | 检查当前 PowerShell 的 DeepSeek 或通用模型变量、OpenAI 兼容 `/chat/completions` 地址和模型 JSON 输出能力。 |
 
 ## JSON → 公开展示快照
 

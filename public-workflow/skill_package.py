@@ -41,6 +41,18 @@ def initialize_state(state_dir: Path) -> Path:
     return root
 
 
+def load_skill_context(state_dir: Path) -> list[dict[str, Any]]:
+    """Return the current local method registry for an incremental model update."""
+    root = initialize_state(state_dir)
+    context: list[dict[str, Any]] = []
+    for package in sorted((root / "skills").iterdir()):
+        if package.is_dir():
+            contract = _read_json(package / "contract.json")
+            registry = _load_registry(package)
+            context.append({"parent_id": contract["parent_id"], "children": registry["children"], "indicators": registry["indicators"], "rules": registry["rules"], "research_models": registry["research_models"]})
+    return context
+
+
 def apply_updates(state_dir: Path, updates: list[dict[str, Any]]) -> Path:
     """Apply validated updates to a candidate and only then promote it to current."""
     state_dir = Path(state_dir)
@@ -143,7 +155,7 @@ def _write_parent_package(package: Path, parent_id: str) -> None:
 
 
 def _empty_registry() -> dict[str, list[dict[str, Any]]]:
-    return {"children": [], "indicators": [], "rules": [], "research_models": [], "aliases": [], "deprecated": []}
+    return {"children": [], "indicators": [], "rules": [], "research_models": [], "aliases": [], "deprecated": [], "fact_lineage": []}
 
 
 def _load_registry(package: Path) -> dict[str, list[dict[str, Any]]]:
@@ -155,6 +167,7 @@ def _load_registry(package: Path) -> dict[str, list[dict[str, Any]]]:
         "research_models": _read_json(references / "research-model.yaml").get("research_models", []),
         "aliases": _read_json(references / "source-traceability.yaml").get("aliases", []),
         "deprecated": _read_json(references / "source-traceability.yaml").get("deprecated", []),
+        "fact_lineage": _read_json(references / "source-traceability.yaml").get("fact_lineage", []),
     }
     if not all(isinstance(value, list) and all(isinstance(item, dict) for item in value) for value in values.values()):
         raise ValueError("SKILL_TREE_INVALID")
@@ -167,7 +180,7 @@ def _write_registry(package: Path, registry: dict[str, list[dict[str, Any]]]) ->
     _write_json(references / "indicator-catalog.yaml", {"indicators": registry["indicators"]})
     _write_json(references / "analysis-rules.yaml", {"analysis_rules": registry["rules"]})
     _write_json(references / "research-model.yaml", {"research_models": registry["research_models"]})
-    _write_json(references / "source-traceability.yaml", {"source_types": ["user-supplied-pdf"], "fact_lineage": [], "aliases": registry["aliases"], "deprecated": registry["deprecated"]})
+    _write_json(references / "source-traceability.yaml", {"source_types": ["user-supplied-pdf"], "fact_lineage": registry["fact_lineage"], "aliases": registry["aliases"], "deprecated": registry["deprecated"]})
     contract_path = package / "contract.json"
     contract = _read_json(contract_path)
     contract["child_dimension_ids"] = [item["id"] for item in registry["children"]]
@@ -180,6 +193,9 @@ def _apply_operation(registry: dict[str, list[dict[str, Any]]], operation: objec
     if not isinstance(operation, dict):
         raise ValueError("OPERATION_INVALID")
     kind = operation.get("operation")
+    citations = operation.get("evidence", [])
+    if citations:
+        registry["fact_lineage"].append({"operation": kind, "evidence": [{"evidence_id": item.get("evidence_id"), "page": item.get("page"), "quote": item.get("quote")} for item in citations if isinstance(item, dict)]})
     if kind == "add_dimension":
         dimension = operation.get("dimension")
         if not _has_id_and_name(dimension) or _find(registry["children"], dimension["id"]) is not None:

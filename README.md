@@ -11,7 +11,7 @@
 | 目录 | 用途 |
 | --- | --- |
 | [`portfolio-prototype/`](portfolio-prototype/) | 部署到 Cloudflare Pages 的纯静态公开展示站。 |
-| [`public-workflow/`](public-workflow/) | 使用者在自己电脑上运行的 PDF→Skill 包命令行工作流。 |
+| [`public-workflow/`](public-workflow/) | 使用者在自己电脑上运行的 PDF→Skill 包命令行与 Streamlit 本地工作台。 |
 | [`github-starter/`](github-starter/) | JSON→公开展示快照的最小可运行样例。 |
 
 ## PDF → Skill 包：当前能力
@@ -22,8 +22,8 @@
 
 1. 在本机提取 PDF 原生文本，进行确定性 Unicode、空白和连续重复行清洗，并落盘为带页码的规范化 Markdown。
 2. 原生文本为空时，可使用本地 Tesseract OCR 生成同样的页码 Markdown；不会将 PDF 上传到 OCR 服务。
-3. 从清洗文本中提取带 `evidence_id`、页码和片段的结构化证据索引，并只将这些证据片段发送到使用者自行配置的 OpenAI 兼容模型端点。
-4. 要求模型每项更新引用已有 evidence ID，再对固定父维度、操作引用、Skill 文件结构与敏感内容校验；失败时保留上一个有效版本。
+3. 从清洗文本中提取带 `evidence_id`、页码和片段的结构化证据索引，并只将这些证据片段发送到使用者自行配置的 OpenAI 兼容模型端点（兼容 DeepSeek 环境变量）。
+4. 要求模型每项更新引用已有 evidence ID 和短引，程序核验引文与页码，再由模型逐项语义复核；之后校验固定父维度、操作引用、Skill 文件结构与敏感内容。失败时保留上一个有效版本。
 5. 导出仅含 `skills/`、`SKILL.md`、`contract.json` 和 `references/` 的 ZIP 包。
 
 Markdown 与证据索引仅保存在使用者的本地 `--state` 目录，不写入 ZIP；扫描 PDF 需要本机安装 Tesseract。详情、安装、真实端点 smoke test 与故障排查见 [`public-workflow/README.md`](public-workflow/README.md)。
@@ -34,10 +34,11 @@ Markdown 与证据索引仅保存在使用者的本地 `--state` 目录，不写
 git clone https://github.com/RebeccaJ79/robot-research-platform.git
 cd robot-research-platform/public-workflow
 python -m pip install -r requirements.txt
+streamlit run local_workbench.py
 python skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
 ```
 
-去掉 `--offline-updates` 后，需在本机环境设置 `MODEL_API_KEY`、`MODEL_BASE_URL`，以及可选的 `MODEL_NAME`。密钥仅发送给使用者配置的模型端点，费用由使用者承担。
+去掉 `--offline-updates` 后，需在本机环境设置 `MODEL_API_KEY`、`MODEL_BASE_URL`，以及可选的 `MODEL_NAME`；也可直接使用 `DEEPSEEK_API_KEY`、可选 `DEEPSEEK_BASE_URL` 和 `DEEPSEEK_MODEL`。密钥仅发送给使用者配置的模型端点，费用由使用者承担。
 
 ## 验证
 

@@ -43,15 +43,18 @@ def build_evidence_bundle(pdf_paths: list[Path], state_dir: Path, *, native_read
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
         native_pages = [] if ocr_mode == "force" else native_reader(source)
         pages = [_clean_page(page) for page in native_pages]
-        use_ocr = ocr_mode == "force" or not any(_meaningful(page) for page in pages)
-        if use_ocr:
+        needs_ocr = ocr_mode == "force" or not pages or any(not _meaningful(page) for page in pages)
+        if needs_ocr:
             if ocr_mode == "off":
                 raise ValueError("PDF_TEXT_EXTRACTION_EMPTY")
             reader = ocr_reader or _read_ocr_pages
-            pages = [_clean_page(page) for page in reader(source)]
+            ocr_pages = [_clean_page(page) for page in reader(source)]
+            if pages and len(ocr_pages) != len(pages):
+                raise ValueError("OCR_PAGE_COUNT_MISMATCH")
+            pages = ocr_pages if ocr_mode == "force" or not pages else [native if _meaningful(native) else ocr_pages[index] for index, native in enumerate(pages)]
             if not any(_meaningful(page) for page in pages):
                 raise ValueError("OCR_TEXT_EXTRACTION_EMPTY")
-            method = "ocr"
+            method = "ocr" if ocr_mode == "force" or not any(_meaningful(page) for page in native_pages) else "mixed"
         else:
             method = "native"
         markdown = _page_markdown(pages)
@@ -64,25 +67,52 @@ def build_evidence_bundle(pdf_paths: list[Path], state_dir: Path, *, native_read
     return EvidenceBundle(documents=documents, evidence=evidence)
 
 
-def validate_evidence_backed_updates(updates: list[dict[str, object]], evidence_ids: set[str]) -> None:
+def validate_evidence_backed_updates(updates: list[dict[str, object]], evidence: dict[str, str] | set[str]) -> None:
     """Require every model operation to cite local, extracted page evidence."""
+    evidence_ids = set(evidence)
+    evidence_text = evidence if isinstance(evidence, dict) else {}
     for update in updates:
         operations = update.get("operations") if isinstance(update, dict) else None
         if not isinstance(operations, list):
             raise ValueError("EVIDENCE_CITATION_REQUIRED")
         for operation in operations:
-            citations = operation.get("evidence_ids") if isinstance(operation, dict) else None
-            if not isinstance(citations, list) or not citations or not all(isinstance(value, str) and value for value in citations):
+            citations = operation.get("evidence") if isinstance(operation, dict) else None
+            if not isinstance(citations, list) or not citations or not all(isinstance(value, dict) for value in citations):
                 raise ValueError("EVIDENCE_CITATION_REQUIRED")
-            if not set(citations) <= evidence_ids:
+            if not all(isinstance(value.get("evidence_id"), str) and isinstance(value.get("quote"), str) and value["quote"].strip() and len(value["quote"].strip()) <= 180 for value in citations):
+                raise ValueError("EVIDENCE_CITATION_REQUIRED")
+            if not {str(value["evidence_id"]) for value in citations} <= evidence_ids:
                 raise ValueError("EVIDENCE_CITATION_UNKNOWN")
+            if evidence_text and any(str(value["quote"]).strip() not in evidence_text[str(value["evidence_id"])] for value in citations):
+                raise ValueError("EVIDENCE_QUOTE_INVALID")
+
+
+def attach_evidence_locations(updates: list[dict[str, object]], bundle: EvidenceBundle) -> list[dict[str, object]]:
+    """Validate citations and retain only a short quote plus page number in output."""
+    evidence = {str(item["evidence_id"]): item for item in bundle.evidence}
+    validate_evidence_backed_updates(updates, {key: str(value["text"]) for key, value in evidence.items()})
+    for update in updates:
+        for operation in update["operations"]:  # validated above
+            operation["evidence"] = [
+                {
+                    "evidence_id": citation["evidence_id"],
+                    "page": evidence[str(citation["evidence_id"])]["page"],
+                    "quote": citation["quote"].strip(),
+                }
+                for citation in operation["evidence"]
+            ]
+    return updates
 
 
 def _clean_page(value: str) -> str:
     text = unicodedata.normalize("NFKC", value or "").replace("\r\n", "\n").replace("\r", "\n")
-    lines = [re.sub(r"[ \t]+", " ", line).strip() for line in text.split("\n")]
-    lines = [line for index, line in enumerate(lines) if line and (index == 0 or line != lines[index - 1])]
-    return " ".join(lines)
+    paragraphs = []
+    for block in re.split(r"\n\s*\n+", text):
+        lines = [re.sub(r"[ \t]+", " ", line).strip() for line in block.split("\n")]
+        lines = [line for index, line in enumerate(lines) if line and (index == 0 or line != lines[index - 1])]
+        if lines:
+            paragraphs.append(" ".join(lines).replace("- ", ""))
+    return "\n\n".join(dict.fromkeys(paragraphs))
 
 
 def _page_markdown(pages: list[str]) -> str:
