@@ -2,11 +2,12 @@
 
 ## Goal
 
-Allow a user to run the public project locally with their own PDF and model
-credentials, then download one `skill-package.zip` whose `skills/` tree follows
-the formal Task 4 Skill package layout. The public workflow must be runnable
-without any production PDF, production Skill, private prompt, private database,
-or platform credential.
+Allow a user to run the public project locally with any number of their own
+robot-industry PDFs and model credentials, then download one versioned
+`skill-package.zip`. Its `skills/` tree follows the formal Task 4 Skill package
+layout and has the six fixed parent dimensions. The public workflow must be
+runnable without any production PDF, production Skill, private prompt, private
+database, or platform credential.
 
 ## Boundary
 
@@ -14,15 +15,19 @@ The public module is a portable local CLI. Cloudflare Pages remains a static
 showcase and links to the source and instructions; it never receives PDFs,
 model keys, extracted text, or generated packages.
 
-The CLI receives one local PDF and writes all transient files into a caller
-selected work directory. Only the final zip is an intended output. The work
-directory holds parsed text and model input only for the local run and is not
-added to the zip.
+The CLI receives one or more local PDFs and writes all transient files and its
+local state into a caller-selected work directory. Each successful run writes a
+new complete ZIP and atomically promotes its validated tree to the current
+local version. The work directory holds parsed text, PDF fingerprints, model
+input, prior versions, and candidate output; none are added to the ZIP.
 
 The public module must not import `robot_evidence_pipeline`, read outside its
-own directory, make assumptions about the robot industry, or reuse the
-production Task 4 prompt. Its model request states only the public package
-contract and asks for generalizable methods derived from caller-provided text.
+own directory, or reuse the production Task 4 prompt. It contains a public
+taxonomy with exactly these stable parent IDs: `market-demand`,
+`technology-product`, `supply-chain`, `commercialization`,
+`company-fundamentals`, and `valuation-investment`. Its model request states
+only the public package contract and asks for generalizable methods derived
+from caller-provided text.
 
 ## Package Contract
 
@@ -41,10 +46,11 @@ skills/
       source-traceability.yaml
 ```
 
-The top-level `skills/` directory can contain zero or more generated Skill
-directories. A valid directory name is generated from the model's declared
-display name after deterministic filename-safe normalization. Each Skill must
-have a unique directory name.
+The top-level `skills/` directory contains the fixed parent directories for
+which a validated method exists. Their names are determined by the public
+taxonomy, not by the model. New PDFs add, merge, deprecate, or revise child
+dimensions, indicators, rules, and research models within their routed parent;
+they never create a seventh parent Skill.
 
 The files mirror the formal package structure but their content is generated
 only from the caller's PDF. `source-traceability.yaml` may identify the input
@@ -76,18 +82,26 @@ does not support OCR because it would add an unpinned native dependency and
 substantially reduce reproducibility.
 
 Offline mode accepts a supplied structured fixture instead of calling a model,
-so contributors can run the full package and zip validation without a key or
-network access. Online mode reads `MODEL_API_KEY`, `MODEL_BASE_URL`, and the
-optional `MODEL_NAME` from the caller's environment and sends the user text
-only to the configured OpenAI-compatible endpoint.
+so contributors can run the full package, an incremental update, and ZIP
+validation without a key or network access. Online mode reads `MODEL_API_KEY`,
+`MODEL_BASE_URL`, and the optional `MODEL_NAME` from the caller's environment
+and sends the user text only to the configured OpenAI-compatible endpoint.
+
+Before generation, the CLI deduplicates PDFs using a local SHA-256 fingerprint
+registry. It routes new content to the six fixed parents, gives the model only
+the affected parent registries, and validates its proposed registry operations.
+The supported operations are add, replace, merge, alias, and deprecate for
+child dimensions, indicators, rules, and research models. Existing active
+entries retain their stable IDs unless an explicit validated operation changes
+them.
 
 ## Validation and Failure Behavior
 
 Validation happens before the zip is created. It rejects missing required
-files, unsafe directory names, duplicate Skill IDs, invalid JSON, missing
-front matter, malformed YAML mappings, a contract that references files outside
-the Skill directory, and forbidden content such as credentials, absolute paths,
-PDF paths, or private pipeline names.
+files, a missing or unknown fixed parent ID, duplicate Skill IDs, invalid JSON,
+missing front matter, malformed YAML mappings, a contract that references files
+outside the Skill directory, and forbidden content such as credentials,
+absolute paths, PDF paths, or private pipeline names.
 
 On every failure, the CLI exits non-zero and does not leave a completed zip at
 the requested destination. It may retain the caller-selected work directory for
@@ -104,13 +118,17 @@ and links to the repository instructions without providing upload controls.
 
 ## Verification
 
-1. A fixture-driven offline run produces a zip with the exact directory and
-   file contract above.
-2. A validation test rejects an archive candidate containing a PDF path,
+1. A fixture-driven offline run over multiple PDFs produces one ZIP with fixed
+   parent directories and the exact file contract above.
+2. A second offline run updates the existing parent registry while retaining
+   unaffected parent packages and stable IDs.
+3. A repeated PDF fingerprint causes no duplicate operation or new version.
+4. A validation test rejects an archive candidate containing a PDF path,
    credential pattern, or reference that escapes its Skill directory.
-3. An online endpoint fixture proves the caller key is sent only to the
+5. An online endpoint fixture proves the caller key is sent only to the
    configured endpoint.
-4. A malformed model response cannot create a zip.
-5. The public-material scan confirms the new module, examples, site files, and
+6. A malformed model response cannot create a ZIP or replace the current
+   version.
+7. The public-material scan confirms the new module, examples, site files, and
    generated test artifacts contain no PDF, private source path, production
    Skill, credential, prompt, raw response, or database file.
