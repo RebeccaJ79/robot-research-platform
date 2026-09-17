@@ -1,0 +1,22 @@
+{
+  "updates": [
+    {
+      "parent_id": "technology-product",
+      "operations": [
+        {
+          "operation": "add_dimension",
+          "dimension": {"id": "product-performance", "name": "产品性能与成熟度"},
+          "indicators": [
+            {"id": "verification-stage", "name": "验证阶段", "availability": "research_input"}
+          ],
+          "rules": [
+            {"id": "stage-assessment", "dimension_id": "product-performance", "indicator_ids": ["verification-stage"], "method": "按验证阶段和适用场景评估产品成熟度。"}
+          ],
+          "research_models": [
+            {"id": "maturity-model", "name": "成熟度评估", "description": "比较技术验证、量产准备和场景适配。"}
+          ]
+        }
+      ]
+    }
+  ]
+}
