@@ -1,12 +1,13 @@
 {
   "schema_version": "1.0",
-  "publication_id": "release-20260916-local-current",
+  "publication_id": "release-20260917-complete-report-display",
   "publications": [
     {
       "id": "daily_focus",
       "type": "daily",
       "title": "每日关注",
       "period": "20260828",
+      "period_end": "20260828",
       "summary": "本周期机器人产业链中游整机与系统集成均呈弱下跌或分化，上游制造装配测试设备出现弱上涨且相对收益为正，但成交额明显收缩，价格信号缺乏量能确认。感知、控制、运动等核心部件节点与整机之间多为普跌中的相对抗跌或分化，尚未形成订单、产能或盈利层面的传导证据。后续需观察上游设备节点的相对强势能否伴随成交额回升，以及中游整机弱势是否向系统集成端进一步扩散。",
       "charts": [
         {
@@ -638,8 +639,8 @@
         {
           "id": "daily-node-return-change",
           "type": "bar",
-          "title": "今日节点收益率变化",
-          "subtitle": "与前一有效交易日比较",
+          "title": "今日与前一交易日节点收益率对比",
+          "subtitle": "同一节点两期收益率水平对比",
           "related_relation_ids": [
             "SUP01",
             "SUP03",
@@ -652,10 +653,10 @@
           },
           "metric": {
             "field": "node_return_change",
-            "label": "节点收益率变化",
+            "label": "节点收益率",
             "unit": "%",
             "format": ".1%",
-            "formula": "节点收益率变化 = 本日节点收益率 - 前一交易日节点收益率"
+            "formula": "本期与前一有效交易日的节点收益率水平对比"
           },
           "data": [
             {
@@ -752,7 +753,6 @@
           "current_return": 0.007391,
           "period_return": 0.007390999999999925,
           "excess_return": 0.011447549295774647,
-          "period_excess_return": -0.9889760039067921,
           "amount_change": 2.207003803405666,
           "focus_rank": 1,
           "rank_change": 17
@@ -771,7 +771,6 @@
           "current_return": 0.015885,
           "period_return": 0.015884999999999927,
           "excess_return": 0.019941549295774647,
-          "period_excess_return": -0.9804820039067921,
           "amount_change": 1.4204056953411568,
           "focus_rank": 2,
           "rank_change": 59
@@ -790,7 +789,6 @@
           "current_return": 0.002963,
           "period_return": 0.002963000000000049,
           "excess_return": 0.007019549295774648,
-          "period_excess_return": -0.993404003906792,
           "amount_change": 1.2281712056730392,
           "focus_rank": 3,
           "rank_change": 4
@@ -812,7 +810,6 @@
           "current_return": 0.1,
           "period_return": 0.10000000000000009,
           "excess_return": 0.10405654929577465,
-          "period_excess_return": -0.8963670039067919,
           "amount_change": 1.18696206142238,
           "focus_rank": 4,
           "rank_change": -3
@@ -831,7 +828,6 @@
           "current_return": 0.0012640000000000001,
           "period_return": 0.0012639999999999318,
           "excess_return": 0.005320549295774648,
-          "period_excess_return": -0.9951030039067921,
           "amount_change": 0.9279729610719598,
           "focus_rank": 5,
           "rank_change": 27
@@ -850,7 +846,6 @@
           "current_return": 0.005118,
           "period_return": 0.005117999999999956,
           "excess_return": 0.009174549295774648,
-          "period_excess_return": -0.991249003906792,
           "amount_change": 0.8145612682120416,
           "focus_rank": 6,
           "rank_change": 11
@@ -869,7 +864,6 @@
           "current_return": 0.017988999999999998,
           "period_return": 0.017989000000000033,
           "excess_return": 0.022045549295774645,
-          "period_excess_return": -0.978378003906792,
           "amount_change": 0.7536882368771738,
           "focus_rank": 7,
           "rank_change": 37
@@ -888,7 +882,6 @@
           "current_return": 0.011115,
           "period_return": 0.011114999999999986,
           "excess_return": 0.015171549295774647,
-          "period_excess_return": -0.985252003906792,
           "amount_change": 0.6591975795404905,
           "focus_rank": 8,
           "rank_change": 61
@@ -1005,27 +998,25 @@
       "id": "weekly_report",
       "type": "weekly",
       "title": "周报",
-      "period": "20260817",
-      "summary": "本周机器人产业链整体呈弱修复：整机制造与运动执行环节相对占优，控制计算、感知传感仍偏中性，上游制造装配设备相对抗跌但成交收缩。节点表现分化且成交确认度普遍偏低，价格信号尚未获得量能或业务事实支撑，产业链传导是否顺畅仍需后续订单、产能与交付数据确认。",
+      "period": "20260713",
+      "period_end": "20260719",
+      "summary": "本周机器人产业链整体走弱，整机制造节点跌幅扩大且相对大盘超额收益转负，上游制造装配与中游系统集成虽普跌但相对抗跌，下游制造业同步走弱。产业链传导的卡点在于：上游与中游的相对抗跌尚未获得整机端订单或交付数据的验证，缺少业务事实支撑，无法确认需求改善。后续需观察整机端成交与订单信号能否企稳，以及上游抗跌是否向中游集成端传导。",
       "charts": [
         {
           "id": "weekly-breadth",
           "type": "line",
           "title": "本周关键节点正超额广度变化",
           "subtitle": "覆盖本周有效交易日",
-          "notes": [
-            "缺失交易日：20260817、20260819、20260820"
-          ],
+          "notes": [],
           "coverage": {
             "available_dates": [
-              "20260818",
-              "20260821"
+              "20260713",
+              "20260714",
+              "20260715",
+              "20260716",
+              "20260717"
             ],
-            "missing_dates": [
-              "20260817",
-              "20260819",
-              "20260820"
-            ]
+            "missing_dates": []
           },
           "related_relation_ids": [
             "SUP01",
@@ -1038,8 +1029,11 @@
             "label": "交易日",
             "label_angle": 0,
             "values": [
-              "20260818",
-              "20260821"
+              "20260713",
+              "20260714",
+              "20260715",
+              "20260716",
+              "20260717"
             ]
           },
           "series": {
@@ -1055,74 +1049,179 @@
           },
           "data": [
             {
-              "trade_date": "20260818",
+              "trade_date": "20260713",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "positive_breadth": 0.0,
+              "node_return_change": -0.07145200000000007
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "positive_breadth": 0.5945945945945945,
+              "node_return_change": 0.09614600000000006
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "positive_breadth": 0.24324324324324323,
+              "node_return_change": -0.0278520000000001
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "positive_breadth": 0.27027027027027023,
+              "node_return_change": 0.010093000000000019
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "positive_breadth": 0.16216216216216214,
+              "node_return_change": -0.07109900000000002
+            },
+            {
+              "trade_date": "20260713",
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "positive_breadth": 0.48648648648648646,
+              "node_return_change": -0.049549000000000065
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "positive_breadth": 0.918918918918919,
+              "node_return_change": 0.07560800000000012
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "positive_breadth": 0.08108108108108107,
+              "node_return_change": -0.02511400000000008
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "positive_breadth": 0.7567567567567568,
+              "node_return_change": 0.012126999999999999
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "positive_breadth": 0.6486486486486486,
+              "node_return_change": -0.05131300000000005
+            },
+            {
+              "trade_date": "20260713",
               "node_id": "M01",
               "node_name": "机器人整机制造",
-              "positive_breadth": 0.3492723493,
-              "node_return_change": null
+              "positive_breadth": 0.19958419958419957,
+              "node_return_change": -0.06595200000000001
             },
             {
-              "trade_date": "20260821",
+              "trade_date": "20260714",
               "node_id": "M01",
               "node_name": "机器人整机制造",
-              "positive_breadth": 0.8004158004,
-              "node_return_change": null
+              "positive_breadth": 0.4074844074844075,
+              "node_return_change": 0.07776899999999998
             },
             {
-              "trade_date": "20260818",
-              "node_id": "U02",
-              "node_name": "运动执行与传动系统",
-              "positive_breadth": 0.5481397687,
-              "node_return_change": null
+              "trade_date": "20260715",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "positive_breadth": 0.30145530145530147,
+              "node_return_change": -0.037467999999999946
             },
             {
-              "trade_date": "20260821",
-              "node_id": "U02",
-              "node_name": "运动执行与传动系统",
-              "positive_breadth": 0.5784273504,
-              "node_return_change": null
+              "trade_date": "20260716",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "positive_breadth": 0.3492723492723493,
+              "node_return_change": 0.020751999999999993
             },
             {
-              "trade_date": "20260818",
-              "node_id": "U03",
-              "node_name": "感知与传感系统",
-              "positive_breadth": 0.2966101695,
-              "node_return_change": null
+              "trade_date": "20260717",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "positive_breadth": 0.19958419958419957,
+              "node_return_change": -0.08110800000000007
             },
             {
-              "trade_date": "20260821",
-              "node_id": "U03",
-              "node_name": "感知与传感系统",
-              "positive_breadth": 0.39548022600000005,
-              "node_return_change": null
+              "trade_date": "20260713",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "positive_breadth": 0.5680224403927069,
+              "node_return_change": -0.06340400000000013
             },
             {
-              "trade_date": "20260818",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "positive_breadth": 0.3186077644,
-              "node_return_change": null
+              "trade_date": "20260714",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "positive_breadth": 0.5497896213183732,
+              "node_return_change": 0.05834499999999998
             },
             {
-              "trade_date": "20260821",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "positive_breadth": 0.3560910308,
-              "node_return_change": null
+              "trade_date": "20260715",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "positive_breadth": 0.7349228611500702,
+              "node_return_change": 0.0021079999999999988
             },
             {
-              "trade_date": "20260818",
+              "trade_date": "20260716",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "positive_breadth": 0.5890603085553998,
+              "node_return_change": -0.0089189999999999
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "positive_breadth": 0.7938288920056101,
+              "node_return_change": -0.041565000000000074
+            },
+            {
+              "trade_date": "20260713",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "positive_breadth": 0.25,
-              "node_return_change": null
+              "positive_breadth": 0.75,
+              "node_return_change": -0.04938300000000001
             },
             {
-              "trade_date": "20260821",
+              "trade_date": "20260714",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "positive_breadth": 0.5,
-              "node_return_change": null
+              "positive_breadth": 1.0,
+              "node_return_change": 0.06445899999999999
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
+              "positive_breadth": 0.75,
+              "node_return_change": 0.03365600000000002
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
+              "positive_breadth": 0.75,
+              "node_return_change": -0.0437265
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
+              "positive_breadth": 1.0,
+              "node_return_change": -0.06805250000000002
             }
           ]
         },
@@ -1154,107 +1253,69 @@
           },
           "data": [
             {
-              "node_id": "U07",
-              "node_name": "制造、装配与测试设备",
-              "period": "本周",
-              "period_excess_return": 0.0085560897
-            },
-            {
-              "node_id": "U07",
-              "node_name": "制造、装配与测试设备",
-              "period": "前一自然周",
-              "period_excess_return": 0.043209834100000004
-            },
-            {
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "period": "本周",
-              "period_excess_return": -0.0066956572
-            },
-            {
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "period": "前一自然周",
-              "period_excess_return": 0.0020864324
-            },
-            {
-              "node_id": "U02",
-              "node_name": "运动执行与传动系统",
-              "period": "本周",
-              "period_excess_return": -0.000791757
-            },
-            {
-              "node_id": "U02",
-              "node_name": "运动执行与传动系统",
-              "period": "前一自然周",
-              "period_excess_return": -0.0221237686
-            },
-            {
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "period": "本周",
-              "period_excess_return": -0.005905482
+              "period_excess_return": -0.07701342747529838
             },
             {
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "period": "前一自然周",
-              "period_excess_return": -0.0366984468
+              "period_excess_return": 0.02718542009035252
             },
             {
-              "node_id": "U03",
-              "node_name": "感知与传感系统",
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
               "period": "本周",
-              "period_excess_return": -0.0142706451
+              "period_excess_return": 0.09986782159783925
             },
             {
-              "node_id": "U03",
-              "node_name": "感知与传感系统",
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
               "period": "前一自然周",
-              "period_excess_return": 0.0016228222
+              "period_excess_return": 0.02659911185307573
+            },
+            {
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "period": "本周",
+              "period_excess_return": 0.0010438105112979823
+            },
+            {
+              "node_id": "D05",
+              "node_name": "商贸物流",
+              "period": "前一自然周",
+              "period_excess_return": -0.03383405038841081
+            },
+            {
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "period": "本周",
+              "period_excess_return": 0.050752661199640725
+            },
+            {
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "period": "前一自然周",
+              "period_excess_return": -0.004515518981413447
+            },
+            {
+              "node_id": "D01",
+              "node_name": "制造业",
+              "period": "本周",
+              "period_excess_return": -0.06264996585894
+            },
+            {
+              "node_id": "D01",
+              "node_name": "制造业",
+              "period": "前一自然周",
+              "period_excess_return": -0.033534553919290166
             }
           ]
         }
       ],
       "company_focus": [
-        {
-          "company_name": "博彦科技",
-          "node_id": "M02",
-          "node_name": "系统集成与解决方案",
-          "chain_position": "中游",
-          "node_ids": [
-            "M02"
-          ],
-          "node_labels": [
-            "中游｜系统集成与解决方案"
-          ],
-          "current_return": 0.0063419999999999995,
-          "period_return": -0.018741074349999942,
-          "excess_return": 0.003403929577464789,
-          "period_excess_return": -1.035263894728625,
-          "amount_change": -0.7366027005886862,
-          "focus_rank": 1,
-          "rank_change": 17
-        },
-        {
-          "company_name": "广和通",
-          "node_id": "M02",
-          "node_name": "系统集成与解决方案",
-          "chain_position": "中游",
-          "node_ids": [
-            "M02"
-          ],
-          "node_labels": [
-            "中游｜系统集成与解决方案"
-          ],
-          "current_return": 0.0026550000000000002,
-          "period_return": -0.016187895414999875,
-          "excess_return": -0.00028307042253521023,
-          "period_excess_return": -1.0327107157936248,
-          "amount_change": -0.7289077478985238,
-          "focus_rank": 2,
-          "rank_change": 21
-        },
         {
           "company_name": "汉鑫科技",
           "node_id": "U03",
@@ -1266,16 +1327,15 @@
           "node_labels": [
             "上游｜感知与传感系统"
           ],
-          "current_return": 0.009114,
-          "period_return": -0.03628099329000001,
-          "excess_return": 0.00617592957746479,
-          "period_excess_return": -1.0528038136686249,
-          "amount_change": -0.7015828769344165,
-          "focus_rank": 3,
-          "rank_change": 21
+          "current_return": 0.045396,
+          "period_return": -0.0008259063898882202,
+          "excess_return": 0.1039452676056338,
+          "amount_change": 2.632542885765732,
+          "focus_rank": 1,
+          "rank_change": 10
         },
         {
-          "company_name": "宝信软件",
+          "company_name": "美格智能",
           "node_id": "U04",
           "node_name": "控制与计算硬件",
           "chain_position": "上游",
@@ -1285,76 +1345,33 @@
           "node_labels": [
             "上游｜控制与计算硬件"
           ],
-          "current_return": -0.01922,
-          "period_return": -0.02301561860000001,
-          "excess_return": -0.02215807042253521,
-          "period_excess_return": -1.0395384389786249,
-          "amount_change": -0.6758316032342647,
-          "focus_rank": 4,
-          "rank_change": 34
-        },
-        {
-          "company_name": "三丰智能",
-          "node_id": "U04",
-          "node_name": "控制与计算硬件",
-          "chain_position": "上游",
-          "node_ids": [
-            "U04"
-          ],
-          "node_labels": [
-            "上游｜控制与计算硬件"
-          ],
-          "current_return": 0.001592,
-          "period_return": 0.028340515952000045,
-          "excess_return": -0.0013460704225352104,
-          "period_excess_return": -0.9881823044266249,
-          "amount_change": -0.7217007860853759,
-          "focus_rank": 5,
-          "rank_change": 38
-        },
-        {
-          "company_name": "瑞迪智驱",
-          "node_id": "U02",
-          "node_name": "运动执行与传动系统",
-          "chain_position": "上游",
-          "node_ids": [
-            "U02"
-          ],
-          "node_labels": [
-            "上游｜运动执行与传动系统"
-          ],
-          "current_return": 0.009414,
-          "period_return": 0.013340620459999952,
-          "excess_return": 0.00647592957746479,
-          "period_excess_return": -1.003182199918625,
-          "amount_change": -0.7012960479072793,
-          "focus_rank": 6,
+          "current_return": 0.041741,
+          "period_return": 0.07875823711909069,
+          "excess_return": 0.1002902676056338,
+          "amount_change": 2.166589637850327,
+          "focus_rank": 2,
           "rank_change": 15
         },
         {
-          "company_name": "金辰股份",
-          "node_id": "U02",
-          "node_name": "运动执行与传动系统",
+          "company_name": "哈铁科技",
+          "node_id": "U03",
+          "node_name": "感知与传感系统",
           "chain_position": "上游",
           "node_ids": [
-            "U02",
-            "U04",
-            "M02"
+            "U03"
           ],
           "node_labels": [
-            "上游｜运动执行与传动系统 + 控制与计算硬件",
-            "中游｜系统集成与解决方案"
+            "上游｜感知与传感系统"
           ],
-          "current_return": 0.003914,
-          "period_return": -0.00023618047600004743,
-          "excess_return": 0.0009759295774647895,
-          "period_excess_return": -1.016759000854625,
-          "amount_change": -0.6922127322566507,
-          "focus_rank": 7,
-          "rank_change": 13
+          "current_return": 0.004957,
+          "period_return": -0.0049073014405802695,
+          "excess_return": 0.0635062676056338,
+          "amount_change": 1.4085072096360638,
+          "focus_rank": 3,
+          "rank_change": 25
         },
         {
-          "company_name": "至信股份",
+          "company_name": "佳士科技",
           "node_id": "M02",
           "node_name": "系统集成与解决方案",
           "chain_position": "中游",
@@ -1364,13 +1381,84 @@
           "node_labels": [
             "中游｜系统集成与解决方案"
           ],
-          "current_return": 0.008564,
-          "period_return": 0.00969157455199987,
-          "excess_return": 0.0056259295774647895,
-          "period_excess_return": -1.006831245826625,
-          "amount_change": -0.6713929370929131,
+          "current_return": 0.006614,
+          "period_return": -0.01296935680497524,
+          "excess_return": 0.06516326760563379,
+          "amount_change": 1.0658771635498758,
+          "focus_rank": 4,
+          "rank_change": 57
+        },
+        {
+          "company_name": "凌云光",
+          "node_id": "U03",
+          "node_name": "感知与传感系统",
+          "chain_position": "上游",
+          "node_ids": [
+            "U03"
+          ],
+          "node_labels": [
+            "上游｜感知与传感系统"
+          ],
+          "current_return": 0.003574,
+          "period_return": -0.1253196958503885,
+          "excess_return": 0.062123267605633796,
+          "amount_change": 0.8494800742993001,
+          "focus_rank": 5,
+          "rank_change": 21
+        },
+        {
+          "company_name": "大鹏工业",
+          "node_id": "U03",
+          "node_name": "感知与传感系统",
+          "chain_position": "上游",
+          "node_ids": [
+            "U03"
+          ],
+          "node_labels": [
+            "上游｜感知与传感系统"
+          ],
+          "current_return": 0.003681,
+          "period_return": -0.11495822157289848,
+          "excess_return": 0.06223026760563379,
+          "amount_change": 0.8397696830269947,
+          "focus_rank": 6,
+          "rank_change": 48
+        },
+        {
+          "company_name": "德迈仕",
+          "node_id": "U02",
+          "node_name": "运动执行与传动系统",
+          "chain_position": "上游",
+          "node_ids": [
+            "U02"
+          ],
+          "node_labels": [
+            "上游｜运动执行与传动系统"
+          ],
+          "current_return": -0.015716,
+          "period_return": -0.06461125524293154,
+          "excess_return": 0.042833267605633794,
+          "amount_change": 0.8640775599799002,
+          "focus_rank": 7,
+          "rank_change": 5
+        },
+        {
+          "company_name": "科达自控",
+          "node_id": "M02",
+          "node_name": "系统集成与解决方案",
+          "chain_position": "中游",
+          "node_ids": [
+            "M02"
+          ],
+          "node_labels": [
+            "中游｜系统集成与解决方案"
+          ],
+          "current_return": -0.038961,
+          "period_return": -0.09682681922039071,
+          "excess_return": 0.019588267605633793,
+          "amount_change": 0.7977351457199968,
           "focus_rank": 8,
-          "rank_change": 31
+          "rank_change": 34
         }
       ],
       "highlights": {
@@ -1385,33 +1473,33 @@
           "relation_id": "SUP01",
           "source_node_id": "U02",
           "target_node_id": "M01",
-          "text": "运动执行环节本周相对比较期改善、整机端同步走强，二者方向一致，但两端成交均收缩，且缺少订单、产能或交付类业务事实，尚不能判定核心部件供给对整机形成实质拉动；需后续订单、排产或出货数据确认。",
-          "source_summary": "本周弱上涨且较比较期由跌转涨，但成交同步收缩，量能未确认。",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩，涨幅缺乏量能配合。"
+          "text": "运动执行与传动系统节点本周相对抗跌，但整机制造节点跌幅扩大且跑输大盘，两者走势分化。由于缺少核心部件订单、交付或产能利用等业务事实，无法判断上游抗跌是否已传导至整机端；需整机端订单或出货数据确认传导是否成立。",
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正，成交额收缩。",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。"
         },
         {
           "relation_id": "SUP03",
           "source_node_id": "U04",
           "target_node_id": "M01",
-          "text": "控制计算环节本周未跟随整机走强，二者表现分化，且控制计算端成交确认度极低，无法支持控制计算供给推动整机的判断；需观察后续该环节订单、出货或库存变化能否与整机节奏同步。",
-          "source_summary": "本周基本持平、相对市场偏弱，成交大幅收缩，情绪中性。",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩。"
+          "text": "控制与计算硬件节点本周相对抗跌且超额收益走阔，但整机制造节点同步走弱且跑输大盘。控制计算供给端的相对强势尚未在整机端体现为订单或交付改善，缺少业务事实支撑；需整机端采购或排产数据确认传导路径。",
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正且扩大。",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。"
         },
         {
           "relation_id": "SUP02",
           "source_node_id": "U03",
           "target_node_id": "M01",
-          "text": "感知传感环节本周走弱与整机走强方向相反，二者未形成同步，感知部件供给对整机的传导缺乏价格与量能证据；需等待感知端订单、出货或价格企稳信号再作判断。",
-          "source_summary": "本周小幅下跌、下跌家数略多，成交收缩，情绪偏弱。",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩。"
+          "text": "感知与传感系统节点本周相对抗跌且成交额放大，但整机制造节点跌幅更深。感知部件供给端的相对韧性未获整机端需求验证，缺少订单或出货数据；需整机端感知部件采购量或库存变化确认传导是否发生。",
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正，成交额放大。",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。"
         },
         {
           "relation_id": "SYN02",
           "source_node_id": "M01",
           "target_node_id": "M02",
-          "text": "整机端本周走强，但系统集成端缺少本周期节点表现数据，无法验证本体向集成传导是否顺畅；需补充集成端本周行情与订单、交付类事实后再评估该链条。",
-          "source_summary": "本周弱上涨、上涨家数占优，但成交大幅收缩，涨幅未获量能确认。",
-          "target_summary": "本周节点数据未在给定上下文中单独披露，无法与整机端进行同口径比较。"
+          "text": "整机制造节点本周跌幅大于系统集成节点，集成端相对抗跌。但整机端走弱尚未在集成端订单或项目交付上得到验证，缺少业务事实；需集成端新签订单或项目验收数据确认整机弱势是否向集成端传导。",
+          "source_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。",
+          "target_summary": "本周普跌但相对抗跌，22家公司中20家下跌，5日窗口超额收益为正。"
         }
       ],
       "transmission_map": [
@@ -1419,71 +1507,72 @@
           "relation_id": "SUP01",
           "source": "运动执行与传动系统",
           "source_stream": "U",
-          "source_status": "弱上涨",
-          "source_summary": "本周弱上涨且较比较期由跌转涨，但成交同步收缩，量能未确认。",
+          "source_status": null,
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正，成交额收缩。",
           "target": "机器人整机制造",
           "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩，涨幅缺乏量能配合。",
+          "target_status": "弱下跌",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。",
           "relation": "核心部件供给",
           "status": "条件性推进",
-          "text": "运动执行环节本周相对比较期改善、整机端同步走强，二者方向一致，但两端成交均收缩，且缺少订单、产能或交付类业务事实，尚不能判定核心部件供给对整机形成实质拉动；需后续订单、排产或出货数据确认。"
+          "text": "运动执行与传动系统节点本周相对抗跌，但整机制造节点跌幅扩大且跑输大盘，两者走势分化。由于缺少核心部件订单、交付或产能利用等业务事实，无法判断上游抗跌是否已传导至整机端；需整机端订单或出货数据确认传导是否成立。"
         },
         {
           "relation_id": "SUP03",
           "source": "控制与计算硬件",
           "source_stream": "U",
-          "source_status": "中性",
-          "source_summary": "本周基本持平、相对市场偏弱，成交大幅收缩，情绪中性。",
+          "source_status": null,
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正且扩大。",
           "target": "机器人整机制造",
           "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩。",
+          "target_status": "弱下跌",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。",
           "relation": "控制计算供给",
           "status": "条件性推进",
-          "text": "控制计算环节本周未跟随整机走强，二者表现分化，且控制计算端成交确认度极低，无法支持控制计算供给推动整机的判断；需观察后续该环节订单、出货或库存变化能否与整机节奏同步。"
+          "text": "控制与计算硬件节点本周相对抗跌且超额收益走阔，但整机制造节点同步走弱且跑输大盘。控制计算供给端的相对强势尚未在整机端体现为订单或交付改善，缺少业务事实支撑；需整机端采购或排产数据确认传导路径。"
         },
         {
           "relation_id": "SUP02",
           "source": "感知与传感系统",
           "source_stream": "U",
-          "source_status": "中性",
-          "source_summary": "本周小幅下跌、下跌家数略多，成交收缩，情绪偏弱。",
+          "source_status": null,
+          "source_summary": "本周普跌但相对抗跌，5日窗口超额收益为正，成交额放大。",
           "target": "机器人整机制造",
           "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本周弱上涨、上涨家数占优，但成交明显收缩。",
+          "target_status": "弱下跌",
+          "target_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。",
           "relation": "感知部件供给",
           "status": "条件性推进",
-          "text": "感知传感环节本周走弱与整机走强方向相反，二者未形成同步，感知部件供给对整机的传导缺乏价格与量能证据；需等待感知端订单、出货或价格企稳信号再作判断。"
+          "text": "感知与传感系统节点本周相对抗跌且成交额放大，但整机制造节点跌幅更深。感知部件供给端的相对韧性未获整机端需求验证，缺少订单或出货数据；需整机端感知部件采购量或库存变化确认传导是否发生。"
         },
         {
           "relation_id": "SYN02",
           "source": "机器人整机制造",
           "source_stream": "M",
-          "source_status": "弱上涨",
-          "source_summary": "本周弱上涨、上涨家数占优，但成交大幅收缩，涨幅未获量能确认。",
+          "source_status": "弱下跌",
+          "source_summary": "本周弱下跌，8家公司全部下跌，5日窗口跌幅扩大且超额收益转负。",
           "target": "系统集成与解决方案",
           "target_stream": "M",
-          "target_status": null,
-          "target_summary": "本周节点数据未在给定上下文中单独披露，无法与整机端进行同口径比较。",
+          "target_status": "普跌但相对抗跌",
+          "target_summary": "本周普跌但相对抗跌，22家公司中20家下跌，5日窗口超额收益为正。",
           "relation": "本体集成",
           "status": "条件性推进",
-          "text": "整机端本周走强，但系统集成端缺少本周期节点表现数据，无法验证本体向集成传导是否顺畅；需补充集成端本周行情与订单、交付类事实后再评估该链条。"
+          "text": "整机制造节点本周跌幅大于系统集成节点，集成端相对抗跌。但整机端走弱尚未在集成端订单或项目交付上得到验证，缺少业务事实；需集成端新签订单或项目验收数据确认整机弱势是否向集成端传导。"
         }
       ],
       "data_notes": [
         "部分结论关联节点暂无可用行情，图表展示本期触发异动的节点。"
       ],
-      "generated_at": "2026-09-11T21:56:32+08:00",
-      "generation_elapsed_seconds": 25.3
+      "generated_at": "2026-09-11T21:56:31+08:00",
+      "generation_elapsed_seconds": 13.0
     },
     {
       "id": "monthly_report",
       "type": "monthly",
       "title": "月报",
       "period": "20260701",
-      "summary": "本月机器人产业链中游整机与系统集成节点普遍录得弱上涨，但上游核心部件节点在更长窗口内仍处弱势，下游制造业节点虽月度转正却伴随成交收缩，产业链传导尚未形成量价共振。控制与计算硬件节点本月相对抗跌且成交确认度较高，是当前少数具备相对强度的上游环节，但其对整机的供给传导仍需订单与产能数据验证。",
+      "period_end": "20260731",
+      "summary": "本月机器人产业链中游整机制造与系统集成板块表现分化但整体上行，上游制造设备与控制硬件相对偏弱，下游制造业需求端出现显著反弹但成交额收缩，显示市场情绪与基本面验证之间存在张力。当前缺乏订单、产能或盈利等业务事实的直接证据，产业链传导信号主要停留在市场层面，需后续跟踪量价确认。",
       "charts": [
         {
           "id": "monthly-cumulative-excess",
@@ -1520,17 +1609,15 @@
             "missing_dates": []
           },
           "related_relation_ids": [
-            "SUP03",
             "SUP01",
-            "SUP02",
+            "SUP03",
             "SYN02",
-            "SYN01"
+            "SUP02"
           ],
           "x_axis": {
             "field": "trade_date",
             "label": "交易日",
             "label_angle": -45,
-            "label_interval": 4,
             "values": [
               "20260701",
               "20260702",
@@ -1573,806 +1660,691 @@
               "trade_date": "20260701",
               "node_id": "D01",
               "node_name": "制造业",
-              "cumulative_excess_return": 0.05439017333333318,
-              "node_return_change": 0.0015689999999999316
-            },
-            {
-              "trade_date": "20260702",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": 0.026945409336032844,
-              "node_return_change": -0.10686200000000001
-            },
-            {
-              "trade_date": "20260703",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.05077507896222022,
-              "node_return_change": -0.0009679999999999689
-            },
-            {
-              "trade_date": "20260706",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.05167923468400715,
-              "node_return_change": 0.0015140000000000153
-            },
-            {
-              "trade_date": "20260707",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.056329546831579425,
-              "node_return_change": 0.002693999999999974
-            },
-            {
-              "trade_date": "20260708",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.06220521654118727,
-              "node_return_change": -0.010168999999999984
-            },
-            {
-              "trade_date": "20260709",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.06078210670532336,
-              "node_return_change": 0.05509900000000001
-            },
-            {
-              "trade_date": "20260710",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.08260691325829561,
-              "node_return_change": -0.029050999999999938
-            },
-            {
-              "trade_date": "20260713",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.1076639397384439,
-              "node_return_change": -0.07145200000000007
-            },
-            {
-              "trade_date": "20260714",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.10670593964196118,
-              "node_return_change": 0.09614600000000006
-            },
-            {
-              "trade_date": "20260715",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.11977171117108187,
-              "node_return_change": -0.0278520000000001
-            },
-            {
-              "trade_date": "20260716",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.12263055181667204,
-              "node_return_change": 0.010093000000000019
-            },
-            {
-              "trade_date": "20260717",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.14008155882189088,
-              "node_return_change": -0.07109900000000002
-            },
-            {
-              "trade_date": "20260720",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.16994886526216657,
-              "node_return_change": -0.01021699999999992
-            },
-            {
-              "trade_date": "20260721",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.16132483318451285,
-              "node_return_change": 0.13328800000000007
-            },
-            {
-              "trade_date": "20260722",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.1736479011569484,
-              "node_return_change": -0.08062100000000005
-            },
-            {
-              "trade_date": "20260723",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.18607851745534065,
-              "node_return_change": 0.02781
-            },
-            {
-              "trade_date": "20260724",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.1851253502855622,
-              "node_return_change": -0.01966000000000001
-            },
-            {
-              "trade_date": "20260727",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.18034277491142103,
-              "node_return_change": 0.06475099999999989
-            },
-            {
-              "trade_date": "20260728",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.1778214546432335,
-              "node_return_change": -0.04845299999999997
-            },
-            {
-              "trade_date": "20260729",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.17573220029805647,
-              "node_return_change": 0.023582000000000103
-            },
-            {
-              "trade_date": "20260730",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.1857620887091016,
-              "node_return_change": -0.05924200000000002
-            },
-            {
-              "trade_date": "20260731",
-              "node_id": "D01",
-              "node_name": "制造业",
-              "cumulative_excess_return": -0.17380816422489065,
-              "node_return_change": 0.10717399999999988
+              "cumulative_excess_return": 0.054390173300000066
             },
             {
               "trade_date": "20260701",
               "node_id": "M01",
               "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.05173082666666662,
-              "node_return_change": -0.06908099999999995
-            },
-            {
-              "trade_date": "20260702",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.09095032933732694,
-              "node_return_change": -0.016071000000000057
-            },
-            {
-              "trade_date": "20260703",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.1031499819688787,
-              "node_return_change": 0.076623
-            },
-            {
-              "trade_date": "20260706",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.08896048734559958,
-              "node_return_change": -0.04397300000000004
-            },
-            {
-              "trade_date": "20260707",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.09115493858771406,
-              "node_return_change": -0.011584999999999956
-            },
-            {
-              "trade_date": "20260708",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.10203326866578222,
-              "node_return_change": -0.01840699999999995
-            },
-            {
-              "trade_date": "20260709",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.06610965460894624,
-              "node_return_change": 0.09933000000000003
-            },
-            {
-              "trade_date": "20260710",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.07876873747066226,
-              "node_return_change": -0.05785700000000005
-            },
-            {
-              "trade_date": "20260713",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.08994446414424262,
-              "node_return_change": -0.06595200000000001
-            },
-            {
-              "trade_date": "20260714",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.0918750680920809,
-              "node_return_change": 0.07776899999999998
-            },
-            {
-              "trade_date": "20260715",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.11679175196547065,
-              "node_return_change": -0.037467999999999946
-            },
-            {
-              "trade_date": "20260716",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.12156093519153732,
-              "node_return_change": 0.020751999999999993
-            },
-            {
-              "trade_date": "20260717",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.14971591449544297,
-              "node_return_change": -0.08110800000000007
-            },
-            {
-              "trade_date": "20260720",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.18181390064369607,
-              "node_return_change": -0.0010729999999999906
-            },
-            {
-              "trade_date": "20260721",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.17632406828167924,
-              "node_return_change": 0.132625
-            },
-            {
-              "trade_date": "20260722",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.17860193857967332,
-              "node_return_change": -0.06501299999999999
-            },
-            {
-              "trade_date": "20260723",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.1810478648710484,
-              "node_return_change": 0.027946999999999944
-            },
-            {
-              "trade_date": "20260724",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.19055829050013018,
-              "node_return_change": -0.04450899999999991
-            },
-            {
-              "trade_date": "20260727",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.18200808217479025,
-              "node_return_change": 0.08222899999999989
-            },
-            {
-              "trade_date": "20260728",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.21308026863250418,
-              "node_return_change": -0.09420899999999988
-            },
-            {
-              "trade_date": "20260729",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.2250751916673711,
-              "node_return_change": 0.04686000000000001
-            },
-            {
-              "trade_date": "20260730",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.27542689199554604,
-              "node_return_change": -0.09426600000000007
-            },
-            {
-              "trade_date": "20260731",
-              "node_id": "M01",
-              "node_name": "机器人整机制造",
-              "cumulative_excess_return": -0.26923170497333504,
-              "node_return_change": 0.15385100000000007
+              "cumulative_excess_return": -0.03345132669999995
             },
             {
               "trade_date": "20260701",
               "node_id": "M02",
               "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.002759173333333198,
-              "node_return_change": -0.0033810000000000784
-            },
-            {
-              "trade_date": "20260702",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.002758047748713688,
-              "node_return_change": -0.03470399999999996
-            },
-            {
-              "trade_date": "20260703",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.022742005271386256,
-              "node_return_change": 0.03414700000000004
-            },
-            {
-              "trade_date": "20260706",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.013648150546598958,
-              "node_return_change": -0.043870000000000076
-            },
-            {
-              "trade_date": "20260707",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.025995039970896805,
-              "node_return_change": -0.015178000000000025
-            },
-            {
-              "trade_date": "20260708",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.019367325819882875,
-              "node_return_change": 0.01047600000000004
-            },
-            {
-              "trade_date": "20260709",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.03242885618607383,
-              "node_return_change": 0.027231000000000005
-            },
-            {
-              "trade_date": "20260710",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.02715483229632143,
-              "node_return_change": 0.014474000000000098
-            },
-            {
-              "trade_date": "20260713",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.017987997648965637,
-              "node_return_change": -0.06340400000000013
-            },
-            {
-              "trade_date": "20260714",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.017979565439238843,
-              "node_return_change": 0.05834499999999998
-            },
-            {
-              "trade_date": "20260715",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": -0.003967613415511662,
-              "node_return_change": 0.0021079999999999988
-            },
-            {
-              "trade_date": "20260716",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.002641220834658453,
-              "node_return_change": -0.0089189999999999
-            },
-            {
-              "trade_date": "20260717",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.022219648899850952,
-              "node_return_change": -0.041565000000000074
-            },
-            {
-              "trade_date": "20260720",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.05181421617665216,
-              "node_return_change": 0.014050000000000007
-            },
-            {
-              "trade_date": "20260721",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.02967853356180261,
-              "node_return_change": 0.03816900000000001
-            },
-            {
-              "trade_date": "20260722",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.037721874291244184,
-              "node_return_change": -0.026680999999999955
-            },
-            {
-              "trade_date": "20260723",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.05087005949176415,
-              "node_return_change": 0.03301799999999999
-            },
-            {
-              "trade_date": "20260724",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.04315570645463973,
-              "node_return_change": -0.055885000000000074
-            },
-            {
-              "trade_date": "20260727",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.03684575494749498,
-              "node_return_change": 0.061345000000000094
-            },
-            {
-              "trade_date": "20260728",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.05882799092118707,
-              "node_return_change": -0.018410000000000037
-            },
-            {
-              "trade_date": "20260729",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.06607473675041065,
-              "node_return_change": 0.009759999999999991
-            },
-            {
-              "trade_date": "20260730",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.08390564693936109,
-              "node_return_change": -0.03465099999999999
-            },
-            {
-              "trade_date": "20260731",
-              "node_id": "M02",
-              "node_name": "系统集成与解决方案",
-              "cumulative_excess_return": 0.08758888839633872,
-              "node_return_change": 0.06699699999999997
+              "cumulative_excess_return": 0.0039166733000000065
             },
             {
               "trade_date": "20260701",
               "node_id": "U04",
               "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.0075698266666667235,
-              "node_return_change": -0.013076000000000088
-            },
-            {
-              "trade_date": "20260702",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.0100876617136203,
-              "node_return_change": -0.02140999999999993
-            },
-            {
-              "trade_date": "20260703",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.023187396066294053,
-              "node_return_change": 0.03798799999999991
-            },
-            {
-              "trade_date": "20260706",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.021102409099449604,
-              "node_return_change": -0.05784699999999987
-            },
-            {
-              "trade_date": "20260707",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.017335350130306737,
-              "node_return_change": 0.008358999999999894
-            },
-            {
-              "trade_date": "20260708",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.0004663391518537896,
-              "node_return_change": 0.0044720000000000315
-            },
-            {
-              "trade_date": "20260709",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.007615496997512405,
-              "node_return_change": 0.023036000000000056
-            },
-            {
-              "trade_date": "20260710",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": -0.0006620704936680655,
-              "node_return_change": 0.009862999999999955
-            },
-            {
-              "trade_date": "20260713",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.023631541433504877,
-              "node_return_change": -0.050073000000000034
-            },
-            {
-              "trade_date": "20260714",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.02559137273431289,
-              "node_return_change": 0.04536399999999996
-            },
-            {
-              "trade_date": "20260715",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.03522218168269853,
-              "node_return_change": -0.0046759999999999025
-            },
-            {
-              "trade_date": "20260716",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.048196786921276935,
-              "node_return_change": 0.0018569999999999975
-            },
-            {
-              "trade_date": "20260717",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.0583725275931799,
-              "node_return_change": -0.057282000000000055
-            },
-            {
-              "trade_date": "20260720",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.08185599357972495,
-              "node_return_change": 0.017106000000000066
-            },
-            {
-              "trade_date": "20260721",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.06778619673778219,
-              "node_return_change": 0.05297200000000002
-            },
-            {
-              "trade_date": "20260722",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.06631959951513755,
-              "node_return_change": -0.043906
-            },
-            {
-              "trade_date": "20260723",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.06802170151266762,
-              "node_return_change": 0.031128999999999962
-            },
-            {
-              "trade_date": "20260724",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.06472159989672943,
-              "node_return_change": -0.04056000000000004
-            },
-            {
-              "trade_date": "20260727",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.0657779030978427,
-              "node_return_change": 0.06413499999999994
-            },
-            {
-              "trade_date": "20260728",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.07615119048055408,
-              "node_return_change": -0.036918999999999924
-            },
-            {
-              "trade_date": "20260729",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.08418478825563436,
-              "node_return_change": 0.021849000000000007
-            },
-            {
-              "trade_date": "20260730",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.10661956387465898,
-              "node_return_change": -0.03130500000000003
-            },
-            {
-              "trade_date": "20260731",
-              "node_id": "U04",
-              "node_name": "控制与计算硬件",
-              "cumulative_excess_return": 0.0945907420096892,
-              "node_return_change": 0.04876200000000008
+              "cumulative_excess_return": 0.0006851732999999527
             },
             {
               "trade_date": "20260701",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": -0.011637826666666684,
-              "node_return_change": -0.007066000000000017
+              "cumulative_excess_return": -0.026903826700000022
+            },
+            {
+              "trade_date": "20260702",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": 0.02694540930356748
+            },
+            {
+              "trade_date": "20260702",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.05624983219341062
+            },
+            {
+              "trade_date": "20260702",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.005692561738400714
+            },
+            {
+              "trade_date": "20260702",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.002566421398396912
             },
             {
               "trade_date": "20260702",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": -0.012570385911693682,
-              "node_return_change": -0.0157485
+              "cumulative_excess_return": -0.03418165190395761
+            },
+            {
+              "trade_date": "20260703",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.05077507902646006
+            },
+            {
+              "trade_date": "20260703",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.06989337044246957
+            },
+            {
+              "trade_date": "20260703",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.011370749100837574
+            },
+            {
+              "trade_date": "20260703",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.010700767337775807
             },
             {
               "trade_date": "20260703",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": -0.02244194358111362,
-              "node_return_change": 0.03963050000000007
+              "cumulative_excess_return": -0.038376419940758244
+            },
+            {
+              "trade_date": "20260706",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.05167923474818581
+            },
+            {
+              "trade_date": "20260706",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.06454155549812823
+            },
+            {
+              "trade_date": "20260706",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.012516095860589327
+            },
+            {
+              "trade_date": "20260706",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.011643094642871277
             },
             {
               "trade_date": "20260706",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": -0.0007651020102142914,
-              "node_return_change": -0.04104300000000005
+              "cumulative_excess_return": -0.016694231501844015
+            },
+            {
+              "trade_date": "20260707",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.056329546863832625
+            },
+            {
+              "trade_date": "20260707",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.07487952501077355
+            },
+            {
+              "trade_date": "20260707",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.022734315938666816
+            },
+            {
+              "trade_date": "20260707",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.007839633676270497
             },
             {
               "trade_date": "20260707",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.018663788191489505,
-              "node_return_change": 0.0039144999999999874
+              "cumulative_excess_return": 0.003419550240434166
+            },
+            {
+              "trade_date": "20260708",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.06220521657323963
+            },
+            {
+              "trade_date": "20260708",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.08829044146440734
+            },
+            {
+              "trade_date": "20260708",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.018418612951283553
+            },
+            {
+              "trade_date": "20260708",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.004853627837782648
             },
             {
               "trade_date": "20260708",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.03509901161654971,
-              "node_return_change": -0.012156
+              "cumulative_excess_return": 0.018711262818278174
+            },
+            {
+              "trade_date": "20260709",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.060782106706164574
+            },
+            {
+              "trade_date": "20260709",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.05493645286648707
+            },
+            {
+              "trade_date": "20260709",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.025874207800016813
+            },
+            {
+              "trade_date": "20260709",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.020559518788952236
             },
             {
               "trade_date": "20260709",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.007328864684055247,
-              "node_return_change": 0.004392500000000021
+              "cumulative_excess_return": -0.004756272362269609
+            },
+            {
+              "trade_date": "20260710",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.08260691322781
+            },
+            {
+              "trade_date": "20260710",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.06631143930184069
+            },
+            {
+              "trade_date": "20260710",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.021436298471785298
+            },
+            {
+              "trade_date": "20260710",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.0251200025841255
             },
             {
               "trade_date": "20260710",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.0035602325044477023,
-              "node_return_change": 0.018791000000000002
+              "cumulative_excess_return": -0.008479691432849434
+            },
+            {
+              "trade_date": "20260713",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1076639396782112
+            },
+            {
+              "trade_date": "20260713",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.0798964148665734
+            },
+            {
+              "trade_date": "20260713",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.023603614801553152
+            },
+            {
+              "trade_date": "20260713",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.012634025509526081
             },
             {
               "trade_date": "20260713",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.017862678560433,
-              "node_return_change": -0.04938300000000001
+              "cumulative_excess_return": -0.006819185728905941
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.10670593955191932
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.08519981215830164
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.024183509600794406
+            },
+            {
+              "trade_date": "20260714",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.010743627746733986
             },
             {
               "trade_date": "20260714",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.02900988989945308,
-              "node_return_change": 0.06445899999999999
+              "cumulative_excess_return": 0.002724871414608643
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.11977171111213336
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.08120168406650086
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.010034177027976376
+            },
+            {
+              "trade_date": "20260715",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": -0.0014540224111073696
             },
             {
               "trade_date": "20260715",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.08741596988513511,
-              "node_return_change": 0.03365600000000002
+              "cumulative_excess_return": 0.007315840520123684
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.12263055175791493
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.09756946965796764
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": -0.00856144447177376
+            },
+            {
+              "trade_date": "20260716",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.00974183485697555
             },
             {
               "trade_date": "20260716",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.10298630943649068,
-              "node_return_change": -0.0437265
+              "cumulative_excess_return": 0.015984961814174303
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1400815587935481
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.12360923499754584
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.001922377089623284
+            },
+            {
+              "trade_date": "20260717",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.01954426046063973
             },
             {
               "trade_date": "20260717",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.1037836067668878,
-              "node_return_change": -0.06805250000000002
+              "cumulative_excess_return": 0.01723041033236461
+            },
+            {
+              "trade_date": "20260720",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.16994886523480834
+            },
+            {
+              "trade_date": "20260720",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.1603797169353396
+            },
+            {
+              "trade_date": "20260720",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.02551742864716089
+            },
+            {
+              "trade_date": "20260720",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.04216619398413335
             },
             {
               "trade_date": "20260720",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.11541945071703097,
-              "node_return_change": 0.014444500000000027
+              "cumulative_excess_return": 0.0179081706101607
+            },
+            {
+              "trade_date": "20260721",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1613248331568703
+            },
+            {
+              "trade_date": "20260721",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.1578505623414752
+            },
+            {
+              "trade_date": "20260721",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.0042084686318328846
+            },
+            {
+              "trade_date": "20260721",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.028612572511483192
             },
             {
               "trade_date": "20260721",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.06765915297556102,
-              "node_return_change": 0.03480549999999999
+              "cumulative_excess_return": -0.02553843022578306
+            },
+            {
+              "trade_date": "20260722",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1736479011017562
+            },
+            {
+              "trade_date": "20260722",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.16621646921277378
+            },
+            {
+              "trade_date": "20260722",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.010224186191368556
+            },
+            {
+              "trade_date": "20260722",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.025669204526945766
             },
             {
               "trade_date": "20260722",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.07317789025501953,
-              "node_return_change": -0.0075505000000000155
+              "cumulative_excess_return": -0.014048060096897852
+            },
+            {
+              "trade_date": "20260723",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1860785174009788
+            },
+            {
+              "trade_date": "20260723",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.16893648787391968
+            },
+            {
+              "trade_date": "20260723",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.018353702671455085
+            },
+            {
+              "trade_date": "20260723",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.031389607841201705
             },
             {
               "trade_date": "20260723",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.08523476482578318,
-              "node_return_change": 0.034225000000000005
+              "cumulative_excess_return": -0.011476460809164979
+            },
+            {
+              "trade_date": "20260724",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.18512535023113674
+            },
+            {
+              "trade_date": "20260724",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.1741559157767465
+            },
+            {
+              "trade_date": "20260724",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.012604159134468329
+            },
+            {
+              "trade_date": "20260724",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.0313515289368802
             },
             {
               "trade_date": "20260724",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.07764851802104977,
-              "node_return_change": -0.05409900000000001
+              "cumulative_excess_return": -0.016091798131763868
+            },
+            {
+              "trade_date": "20260727",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.18034277488383843
+            },
+            {
+              "trade_date": "20260727",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.1708400747273371
+            },
+            {
+              "trade_date": "20260727",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.0065519185512896705
+            },
+            {
+              "trade_date": "20260727",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.03379077152791354
             },
             {
               "trade_date": "20260727",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.07064875265277237,
-              "node_return_change": 0.060548000000000046
+              "cumulative_excess_return": -0.030296389043500294
+            },
+            {
+              "trade_date": "20260728",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.17782145458824417
+            },
+            {
+              "trade_date": "20260728",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.19645359867396794
+            },
+            {
+              "trade_date": "20260728",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.026613068700989118
+            },
+            {
+              "trade_date": "20260728",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.04385272606103907
             },
             {
               "trade_date": "20260728",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.10119282696941068,
-              "node_return_change": -0.010635999999999979
+              "cumulative_excess_return": -0.006065370533688497
+            },
+            {
+              "trade_date": "20260729",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.17573220024292735
+            },
+            {
+              "trade_date": "20260729",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.2073974024612596
+            },
+            {
+              "trade_date": "20260729",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.03291351629717543
+            },
+            {
+              "trade_date": "20260729",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.056934413686362983
             },
             {
               "trade_date": "20260729",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.11286560307842564,
-              "node_return_change": 0.00618849999999993
+              "cumulative_excess_return": -0.002862793885392456
+            },
+            {
+              "trade_date": "20260730",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.1857620886546434
+            },
+            {
+              "trade_date": "20260730",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.23669456249870746
+            },
+            {
+              "trade_date": "20260730",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.04921006140131001
+            },
+            {
+              "trade_date": "20260730",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.07917206008606481
             },
             {
               "trade_date": "20260730",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.14992042197638322,
-              "node_return_change": -0.021835999999999967
+              "cumulative_excess_return": 0.03033864435367617
+            },
+            {
+              "trade_date": "20260731",
+              "node_id": "D01",
+              "node_name": "制造业",
+              "cumulative_excess_return": -0.17380816416963274
+            },
+            {
+              "trade_date": "20260731",
+              "node_id": "M01",
+              "node_name": "机器人整机制造",
+              "cumulative_excess_return": -0.234784299044708
+            },
+            {
+              "trade_date": "20260731",
+              "node_id": "M02",
+              "node_name": "系统集成与解决方案",
+              "cumulative_excess_return": 0.04343428591850307
+            },
+            {
+              "trade_date": "20260731",
+              "node_id": "U04",
+              "node_name": "控制与计算硬件",
+              "cumulative_excess_return": 0.06700452460924167
             },
             {
               "trade_date": "20260731",
               "node_id": "U07",
               "node_name": "制造、装配与测试设备",
-              "cumulative_excess_return": 0.13442020763880325,
-              "node_return_change": 0.03354849999999998
+              "cumulative_excess_return": 0.016444651375204122
             }
           ]
         },
@@ -2382,11 +2354,10 @@
           "title": "关键节点本月与上一自然月超额收益对比",
           "subtitle": "两个周期分别以 0% 为基准",
           "related_relation_ids": [
-            "SUP03",
             "SUP01",
-            "SUP02",
+            "SUP03",
             "SYN02",
-            "SYN01"
+            "SUP02"
           ],
           "category_axis": {
             "field": "node_name",
@@ -2408,61 +2379,61 @@
               "node_id": "D01",
               "node_name": "制造业",
               "period": "本月",
-              "period_excess_return": -0.17380816422489065
+              "period_excess_return": -0.1738081642
             },
             {
               "node_id": "D01",
               "node_name": "制造业",
               "period": "上一自然月",
-              "period_excess_return": 0.13204231710097192
+              "period_excess_return": 0.1320423171
             },
             {
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "period": "本月",
-              "period_excess_return": -0.26923170497333504
+              "period_excess_return": -0.2347842991
             },
             {
               "node_id": "M01",
               "node_name": "机器人整机制造",
               "period": "上一自然月",
-              "period_excess_return": 0.02040038495454377
+              "period_excess_return": 0.017050442000000002
             },
             {
               "node_id": "U04",
               "node_name": "控制与计算硬件",
               "period": "本月",
-              "period_excess_return": 0.0945907420096892
+              "period_excess_return": 0.0670045245
             },
             {
               "node_id": "U04",
               "node_name": "控制与计算硬件",
               "period": "上一自然月",
-              "period_excess_return": -0.16437216853999037
-            },
-            {
-              "node_id": "U07",
-              "node_name": "制造、装配与测试设备",
-              "period": "本月",
-              "period_excess_return": 0.13442020763880325
-            },
-            {
-              "node_id": "U07",
-              "node_name": "制造、装配与测试设备",
-              "period": "上一自然月",
-              "period_excess_return": -0.11064744970954077
+              "period_excess_return": -0.12987204600000002
             },
             {
               "node_id": "M02",
               "node_name": "系统集成与解决方案",
               "period": "本月",
-              "period_excess_return": 0.08758888839633872
+              "period_excess_return": 0.0434342858
             },
             {
               "node_id": "M02",
               "node_name": "系统集成与解决方案",
               "period": "上一自然月",
-              "period_excess_return": -0.12673795576818603
+              "period_excess_return": -0.11860960250000001
+            },
+            {
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
+              "period": "本月",
+              "period_excess_return": 0.0164446513
+            },
+            {
+              "node_id": "U07",
+              "node_name": "制造、装配与测试设备",
+              "period": "上一自然月",
+              "period_excess_return": -0.0554029106
             }
           ]
         }
@@ -2473,16 +2444,9 @@
           "node_id": "U02",
           "node_name": "运动执行与传动系统",
           "chain_position": "上游",
-          "node_ids": [
-            "U02"
-          ],
-          "node_labels": [
-            "上游｜运动执行与传动系统"
-          ],
           "current_return": 0.09211399999999999,
           "period_return": -0.18844360053756293,
           "excess_return": 0.04462042647058823,
-          "period_excess_return": -1.0104052768449336,
           "amount_change": 1.2359861723921952,
           "focus_rank": 1,
           "rank_change": 9
@@ -2492,16 +2456,9 @@
           "node_id": "U02",
           "node_name": "运动执行与传动系统",
           "chain_position": "上游",
-          "node_ids": [
-            "U02"
-          ],
-          "node_labels": [
-            "上游｜运动执行与传动系统"
-          ],
           "current_return": 0.070099,
           "period_return": -0.030151007322952728,
           "excess_return": 0.02260542647058824,
-          "period_excess_return": -0.8521126836303236,
           "amount_change": 1.3234849316363033,
           "focus_rank": 2,
           "rank_change": 48
@@ -2511,16 +2468,9 @@
           "node_id": "M01",
           "node_name": "机器人整机制造",
           "chain_position": "中游",
-          "node_ids": [
-            "M01"
-          ],
-          "node_labels": [
-            "中游｜机器人整机制造"
-          ],
           "current_return": 0.02535,
           "period_return": -0.20486304924314247,
           "excess_return": -0.022143573529411754,
-          "period_excess_return": -1.0268247255505134,
           "amount_change": 0.6510531896809979,
           "focus_rank": 3,
           "rank_change": 41
@@ -2530,16 +2480,9 @@
           "node_id": "M02",
           "node_name": "系统集成与解决方案",
           "chain_position": "中游",
-          "node_ids": [
-            "M02"
-          ],
-          "node_labels": [
-            "中游｜系统集成与解决方案"
-          ],
           "current_return": 0.076271,
           "period_return": -0.5016348948207632,
           "excess_return": 0.02877742647058825,
-          "period_excess_return": -1.323596571128134,
           "amount_change": 0.33962386538723544,
           "focus_rank": 4,
           "rank_change": 16
@@ -2549,16 +2492,9 @@
           "node_id": "U02",
           "node_name": "运动执行与传动系统",
           "chain_position": "上游",
-          "node_ids": [
-            "U02"
-          ],
-          "node_labels": [
-            "上游｜运动执行与传动系统"
-          ],
           "current_return": 0.022096,
           "period_return": -0.5008376193712534,
           "excess_return": -0.025397573529411754,
-          "period_excess_return": -1.322799295678624,
           "amount_change": 0.33945635470699886,
           "focus_rank": 5,
           "rank_change": 26
@@ -2568,16 +2504,9 @@
           "node_id": "M01",
           "node_name": "机器人整机制造",
           "chain_position": "中游",
-          "node_ids": [
-            "M01"
-          ],
-          "node_labels": [
-            "中游｜机器人整机制造"
-          ],
           "current_return": 0.058552,
           "period_return": -0.507520713814138,
           "excess_return": 0.011058426470588245,
-          "period_excess_return": -1.329482390121509,
           "amount_change": 0.33430831800467264,
           "focus_rank": 6,
           "rank_change": 2
@@ -2587,16 +2516,9 @@
           "node_id": "M02",
           "node_name": "系统集成与解决方案",
           "chain_position": "中游",
-          "node_ids": [
-            "M02"
-          ],
-          "node_labels": [
-            "中游｜系统集成与解决方案"
-          ],
           "current_return": 0.09036899999999999,
           "period_return": -0.15812751848685036,
           "excess_return": 0.042875426470588236,
-          "period_excess_return": -0.9800891947942212,
           "amount_change": 0.5520133567629117,
           "focus_rank": 7,
           "rank_change": 31
@@ -2606,16 +2528,9 @@
           "node_id": "U03",
           "node_name": "感知与传感系统",
           "chain_position": "上游",
-          "node_ids": [
-            "U03"
-          ],
-          "node_labels": [
-            "上游｜感知与传感系统"
-          ],
           "current_return": 0.093726,
           "period_return": -0.32515380535261007,
           "excess_return": 0.04623242647058825,
-          "period_excess_return": -1.147115481659981,
           "amount_change": 0.3767275983437326,
           "focus_rank": 8,
           "rank_change": 14
@@ -2630,124 +2545,101 @@
       },
       "conclusions": [
         {
-          "relation_id": "SUP03",
-          "source_node_id": "U04",
-          "target_node_id": "M01",
-          "text": "控制与计算硬件节点本月录得正收益且成交确认广度较高，在20日窗口内相对抗跌，显示该环节存在阶段性相对强度信号；但整机节点同期月度虽弱上涨，20日窗口仍为负收益且成交确认不足，两者尚未形成量价共振。该相对强度能否传导至整机，需后续订单、产能利用率或交付数据确认，当前仅有市场表现证据，不足以推断供给放量或需求改善。",
-          "source_summary": "本月普涨但相对偏弱，成交确认广度较高，20日窗口相对抗跌",
-          "target_summary": "本月弱上涨，但20日窗口仍处弱势，成交确认广度偏低"
-        },
-        {
           "relation_id": "SUP01",
           "source_node_id": "U02",
           "target_node_id": "M01",
-          "text": "运动执行与传动系统节点本月及20日窗口均处弱势，成交确认广度持续为零，未见资金或交易层面的改善信号；整机节点本月虽弱上涨，但20日窗口仍为负收益，两者走势分化。核心部件供给对整机的传导是否顺畅，需等待部件端订单、产能或交付数据出现方向性变化后方可判断，当前市场表现不支持因果推断。",
-          "source_summary": "本月及20日窗口均处弱势，成交确认广度持续为零",
-          "target_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低"
+          "text": "运动执行部件与整机制造板块本月均呈上涨态势，但两者内部均现分化且成交确认度不高，尚不能据此推断核心部件订单或交付改善；需结合后续订单或产能数据验证供给传导是否实质发生。",
+          "source_summary": "本月运动执行与传动系统板块整体上涨，但个股分化明显，成交额变化不一，缺乏一致性的量价确认。",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。"
         },
         {
-          "relation_id": "SUP02",
-          "source_node_id": "U03",
+          "relation_id": "SUP03",
+          "source_node_id": "U04",
           "target_node_id": "M01",
-          "text": "感知与传感系统节点本月录得正收益但相对偏弱，20日窗口仍处弱势且成交确认广度偏低；整机节点本月弱上涨但更长窗口同样偏弱。两节点均缺乏成交确认，感知部件对整机的供给传导尚无市场层面的验证信号，需后续订单或出货数据确认。",
-          "source_summary": "本月普涨但相对偏弱，20日窗口仍处弱势，成交确认广度偏低",
-          "target_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低"
+          "text": "控制与计算硬件板块虽上涨但相对收益为负且成交萎缩，与整机制造板块的上涨形成背离，表明当前硬件端的市场表现并未有效传导至整机环节；需观察后续订单或出货数据以确认是否存在实际需求拉动。",
+          "source_summary": "本月控制与计算硬件板块普涨但相对市场偏弱，成交额下降，上涨广度低，显示资金参与度有限。",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。"
         },
         {
           "relation_id": "SYN02",
           "source_node_id": "M01",
           "target_node_id": "M02",
-          "text": "整机节点本月弱上涨但20日窗口仍为负收益，系统集成节点本月表现中性且成交确认广度较高，两者在月度维度均未形成明确的强弱分化。本体向集成的传导是否顺畅，需结合集成端项目落地、交付或收入确认等业务数据进一步验证，当前仅有市场表现证据。",
-          "source_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低",
-          "target_summary": "本月中性，成交确认广度较高，20日窗口仍处弱势"
+          "text": "整机制造与系统集成板块本月均上涨，系统集成成交额增加且上涨广度较高，但两者均缺乏订单或项目落地等业务事实，无法确认本体到集成的需求传导已形成；需后续跟踪集成商订单或项目披露。",
+          "source_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。",
+          "target_summary": "本月系统集成与解决方案板块上涨且成交额增加，上涨公司占比过半，但整体表现中性，缺乏明确方向性信号。"
         },
         {
-          "relation_id": "SYN01",
-          "source_node_id": "U05",
-          "target_node_id": "M02",
-          "text": "下游制造业节点本月录得正收益且月度环比改善，但成交确认广度偏低，且20日窗口仍为负收益，显示下游需求侧尚未形成持续放量信号。该节点与系统集成节点之间的传导关系，需等待下游资本开支、订单或产能数据确认，当前市场表现不足以推断需求已传导至中游。",
-          "source_summary": "下游制造业节点本月录得正收益且月度环比改善，但成交确认广度偏低，20日窗口仍为负收益",
-          "target_summary": "本月中性，成交确认广度较高，20日窗口仍处弱势"
+          "relation_id": "SUP02",
+          "source_node_id": "U03",
+          "target_node_id": "M01",
+          "text": "感知部件板块本月虽上涨但相对收益为负且成交未放大，与整机制造板块的上涨缺乏同步性，表明感知端供给尚未形成对整机市场的明确拉动；需观察后续订单或技术规格升级等证据。",
+          "source_summary": "本月感知与传感系统板块上涨但相对市场偏弱，成交额微降，上涨广度不足，显示市场参与度有限。",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。"
         }
       ],
       "transmission_map": [
-        {
-          "relation_id": "SUP03",
-          "source": "控制与计算硬件",
-          "source_stream": "U",
-          "source_status": "普涨但相对偏弱",
-          "source_summary": "本月普涨但相对偏弱，成交确认广度较高，20日窗口相对抗跌",
-          "target": "机器人整机制造",
-          "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本月弱上涨，但20日窗口仍处弱势，成交确认广度偏低",
-          "relation": "控制计算供给",
-          "status": "条件性推进",
-          "text": "控制与计算硬件节点本月录得正收益且成交确认广度较高，在20日窗口内相对抗跌，显示该环节存在阶段性相对强度信号；但整机节点同期月度虽弱上涨，20日窗口仍为负收益且成交确认不足，两者尚未形成量价共振。该相对强度能否传导至整机，需后续订单、产能利用率或交付数据确认，当前仅有市场表现证据，不足以推断供给放量或需求改善。"
-        },
         {
           "relation_id": "SUP01",
           "source": "运动执行与传动系统",
           "source_stream": "U",
           "source_status": null,
-          "source_summary": "本月及20日窗口均处弱势，成交确认广度持续为零",
+          "source_summary": "本月运动执行与传动系统板块整体上涨，但个股分化明显，成交额变化不一，缺乏一致性的量价确认。",
           "target": "机器人整机制造",
           "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低",
+          "target_status": "分化",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。",
           "relation": "核心部件供给",
           "status": "条件性推进",
-          "text": "运动执行与传动系统节点本月及20日窗口均处弱势，成交确认广度持续为零，未见资金或交易层面的改善信号；整机节点本月虽弱上涨，但20日窗口仍为负收益，两者走势分化。核心部件供给对整机的传导是否顺畅，需等待部件端订单、产能或交付数据出现方向性变化后方可判断，当前市场表现不支持因果推断。"
+          "text": "运动执行部件与整机制造板块本月均呈上涨态势，但两者内部均现分化且成交确认度不高，尚不能据此推断核心部件订单或交付改善；需结合后续订单或产能数据验证供给传导是否实质发生。"
+        },
+        {
+          "relation_id": "SUP03",
+          "source": "控制与计算硬件",
+          "source_stream": "U",
+          "source_status": "普涨但相对偏弱",
+          "source_summary": "本月控制与计算硬件板块普涨但相对市场偏弱，成交额下降，上涨广度低，显示资金参与度有限。",
+          "target": "机器人整机制造",
+          "target_stream": "M",
+          "target_status": "分化",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。",
+          "relation": "控制计算供给",
+          "status": "条件性推进",
+          "text": "控制与计算硬件板块虽上涨但相对收益为负且成交萎缩，与整机制造板块的上涨形成背离，表明当前硬件端的市场表现并未有效传导至整机环节；需观察后续订单或出货数据以确认是否存在实际需求拉动。"
+        },
+        {
+          "relation_id": "SYN02",
+          "source": "机器人整机制造",
+          "source_stream": "M",
+          "source_status": "分化",
+          "source_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。",
+          "target": "系统集成与解决方案",
+          "target_stream": "M",
+          "target_status": "中性",
+          "target_summary": "本月系统集成与解决方案板块上涨且成交额增加，上涨公司占比过半，但整体表现中性，缺乏明确方向性信号。",
+          "relation": "本体集成",
+          "status": "条件性推进",
+          "text": "整机制造与系统集成板块本月均上涨，系统集成成交额增加且上涨广度较高，但两者均缺乏订单或项目落地等业务事实，无法确认本体到集成的需求传导已形成；需后续跟踪集成商订单或项目披露。"
         },
         {
           "relation_id": "SUP02",
           "source": "感知与传感系统",
           "source_stream": "U",
           "source_status": null,
-          "source_summary": "本月普涨但相对偏弱，20日窗口仍处弱势，成交确认广度偏低",
+          "source_summary": "本月感知与传感系统板块上涨但相对市场偏弱，成交额微降，上涨广度不足，显示市场参与度有限。",
           "target": "机器人整机制造",
           "target_stream": "M",
-          "target_status": "弱上涨",
-          "target_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低",
+          "target_status": "分化",
+          "target_summary": "本月机器人整机制造板块上涨但内部涨跌互现，成交额小幅增加，市场情绪偏积极但未获基本面数据支撑。",
           "relation": "感知部件供给",
           "status": "条件性推进",
-          "text": "感知与传感系统节点本月录得正收益但相对偏弱，20日窗口仍处弱势且成交确认广度偏低；整机节点本月弱上涨但更长窗口同样偏弱。两节点均缺乏成交确认，感知部件对整机的供给传导尚无市场层面的验证信号，需后续订单或出货数据确认。"
-        },
-        {
-          "relation_id": "SYN02",
-          "source": "机器人整机制造",
-          "source_stream": "M",
-          "source_status": "弱上涨",
-          "source_summary": "本月弱上涨，但20日窗口仍为负收益，成交确认广度偏低",
-          "target": "系统集成与解决方案",
-          "target_stream": "M",
-          "target_status": "中性",
-          "target_summary": "本月中性，成交确认广度较高，20日窗口仍处弱势",
-          "relation": "本体集成",
-          "status": "条件性推进",
-          "text": "整机节点本月弱上涨但20日窗口仍为负收益，系统集成节点本月表现中性且成交确认广度较高，两者在月度维度均未形成明确的强弱分化。本体向集成的传导是否顺畅，需结合集成端项目落地、交付或收入确认等业务数据进一步验证，当前仅有市场表现证据。"
-        },
-        {
-          "relation_id": "SYN01",
-          "source": "软件与智能系统",
-          "source_stream": "U",
-          "source_status": null,
-          "source_summary": "下游制造业节点本月录得正收益且月度环比改善，但成交确认广度偏低，20日窗口仍为负收益",
-          "target": "系统集成与解决方案",
-          "target_stream": "M",
-          "target_status": "中性",
-          "target_summary": "本月中性，成交确认广度较高，20日窗口仍处弱势",
-          "relation": "软件智能使能",
-          "status": "条件性推进",
-          "text": "下游制造业节点本月录得正收益且月度环比改善，但成交确认广度偏低，且20日窗口仍为负收益，显示下游需求侧尚未形成持续放量信号。该节点与系统集成节点之间的传导关系，需等待下游资本开支、订单或产能数据确认，当前市场表现不足以推断需求已传导至中游。"
+          "text": "感知部件板块本月虽上涨但相对收益为负且成交未放大，与整机制造板块的上涨缺乏同步性，表明感知端供给尚未形成对整机市场的明确拉动；需观察后续订单或技术规格升级等证据。"
         }
       ],
       "data_notes": [
-        "行情补采未完成，以下结论与图表仅基于已收集行情；缺失日期已单独标注。",
         "部分结论关联节点暂无可用行情，图表展示本期触发异动的节点。"
       ],
-      "generated_at": "2026-09-11T20:20:28+08:00",
-      "generation_elapsed_seconds": 129.3
+      "generated_at": "2026-09-03T14:34:42+08:00",
+      "generation_elapsed_seconds": 27.5
     }
   ],
   "graph": {
