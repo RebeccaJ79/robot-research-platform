@@ -195,3 +195,14 @@ def test_public_workflow_tree_rejects_private_artifacts(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="PUBLIC_MATERIAL_FORBIDDEN"):
         scan_public_materials(public_root)
+
+
+def test_public_scan_ignores_local_runtime_directories(tmp_path: Path) -> None:
+    from skill_package import scan_public_materials
+
+    (tmp_path / "job-queue").mkdir()
+    (tmp_path / "job-queue" / "jobs.sqlite3").write_bytes(b"local")
+    (tmp_path / ".local-skill-workbench").mkdir()
+    (tmp_path / ".local-skill-workbench" / "report.pdf").write_bytes(b"local")
+
+    scan_public_materials(tmp_path)

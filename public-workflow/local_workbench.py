@@ -50,7 +50,7 @@ def render_live_status() -> None:
     active = next((job for job in jobs if job["id"] == active_job_id), jobs[0] if jobs else None)
     if active:
         st.progress(int(active["progress"] * 100), text=f"{active['status']} · {active['stage']} · 当前 PDF：{active['current_pdf'] or '—'}")
-        st.write({"任务": active["id"][:8], "Worker": active["worker_id"] or "等待分配", "当前 PDF": active["current_pdf"] or "—", "已完成 PDF": f"{active['completed_files']}/{active['total_files']}", "错误": active["error_code"] or "—"})
+        st.write({"任务": active["id"][:8], "Worker": active["worker_id"] or "等待分配", "当前 PDF": active["current_pdf"] or "—", "当前页": f"{active['current_page'] or '—'}/{active['total_pages'] or '—'}", "已完成 PDF": f"{active['completed_files']}/{active['total_files']}", "错误": active["error_code"] or "—"})
         if active["status"] == "completed" and active["output_path"].is_file():
             st.download_button("下载 skill-package.zip", data=active["output_path"].read_bytes(), file_name="skill-package.zip", mime="application/zip")
     else:

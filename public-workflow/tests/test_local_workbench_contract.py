@@ -8,4 +8,5 @@ def test_workbench_submits_jobs_and_refreshes_live_status() -> None:
     assert "store.enqueue(" in source
     assert "@st.fragment(run_every=1)" in source
     assert "当前 PDF" in source
+    assert "当前页" in source
     assert "Worker" in source

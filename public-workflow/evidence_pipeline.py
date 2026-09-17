@@ -53,18 +53,26 @@ def build_evidence_bundle(
             progress_callback({"stage": "解析 PDF", "file_name": source.name, "completed_files": index - 1, "total_files": total_files, "progress": (index - 1) / total_files * 0.6})
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
         native_pages = [] if ocr_mode == "force" else native_reader(source)
-        pages = [_clean_page(page) for page in native_pages]
+        pages = []
+        for page_number, page in enumerate(native_pages, start=1):
+            pages.append(_clean_page(page))
+            if progress_callback:
+                progress_callback({"stage": "解析 PDF", "file_name": source.name, "completed_files": index - 1, "total_files": total_files, "progress": (index - 1) / total_files * 0.6, "current_page": page_number, "total_pages": len(native_pages)})
         needs_ocr = ocr_mode == "force" or not pages or any(not _meaningful(page) for page in pages)
         if needs_ocr:
             if progress_callback:
                 progress_callback({"stage": "OCR", "file_name": source.name, "completed_files": index - 1, "total_files": total_files, "progress": (index - 1) / total_files * 0.6 + 0.15 / total_files})
             if ocr_mode == "off":
                 raise ValueError("PDF_TEXT_EXTRACTION_EMPTY")
-            reader = ocr_reader or _read_ocr_pages
-            ocr_pages = [_clean_page(page) for page in reader(source)]
-            if pages and len(ocr_pages) != len(pages):
-                raise ValueError("OCR_PAGE_COUNT_MISMATCH")
-            pages = ocr_pages if ocr_mode == "force" or not pages else [native if _meaningful(native) else ocr_pages[index] for index, native in enumerate(pages)]
+            missing_pages = list(range(len(pages))) if ocr_mode == "force" else [page_index for page_index, page in enumerate(pages) if not _meaningful(page)]
+            if ocr_reader:
+                ocr_pages = [_clean_page(page) for page in ocr_reader(source)]
+                if pages and len(ocr_pages) != len(pages):
+                    raise ValueError("OCR_PAGE_COUNT_MISMATCH")
+                pages = ocr_pages if ocr_mode == "force" or not pages else [native if _meaningful(native) else ocr_pages[page_index] for page_index, native in enumerate(pages)]
+            else:
+                ocr_pages = {page_index: _clean_page(page) for page_index, page in _read_ocr_pages(source, missing_pages or None).items()}
+                pages = [ocr_pages[page_index] for page_index in sorted(ocr_pages)] if not pages else [ocr_pages[page_index] if ocr_mode == "force" or not _meaningful(native) else native for page_index, native in enumerate(pages)]
             if not any(_meaningful(page) for page in pages):
                 raise ValueError("OCR_TEXT_EXTRACTION_EMPTY")
             method = "ocr" if ocr_mode == "force" or not any(_meaningful(page) for page in native_pages) else "mixed"
@@ -157,7 +165,7 @@ def _read_native_pages(pdf_path: Path) -> list[str]:
     return [page.extract_text() or "" for page in PdfReader(str(pdf_path)).pages]
 
 
-def _read_ocr_pages(pdf_path: Path) -> list[str]:
+def _read_ocr_pages(pdf_path: Path, page_indexes: list[int] | None = None) -> dict[int, str]:
     try:
         import fitz
         import pytesseract
@@ -166,6 +174,13 @@ def _read_ocr_pages(pdf_path: Path) -> list[str]:
         raise RuntimeError("OCR_DEPENDENCIES_REQUIRED") from error
     try:
         document = fitz.open(str(pdf_path))
-        return [pytesseract.image_to_string(Image.open(io.BytesIO(page.get_pixmap(matrix=fitz.Matrix(2, 2)).pil_tobytes(format="PNG"))), lang="chi_sim+eng") for page in document]
+        selected = range(len(document)) if page_indexes is None else page_indexes
+        return {
+            page_index: pytesseract.image_to_string(
+                Image.open(io.BytesIO(document[page_index].get_pixmap(matrix=fitz.Matrix(2, 2)).pil_tobytes(format="PNG"))),
+                lang="chi_sim+eng",
+            )
+            for page_index in selected
+        }
     except pytesseract.TesseractNotFoundError as error:
         raise RuntimeError("TESSERACT_REQUIRED") from error

@@ -284,7 +284,7 @@ def scan_public_materials(root: Path) -> None:
     forbidden_names = {".pdf", ".sqlite", ".sqlite3", ".jsonl"}
     for path in root.rglob("*"):
         relative_parts = path.relative_to(root).parts
-        if any(part in {".git", "__pycache__", ".pytest_cache"} or part.startswith(".pytest-") for part in relative_parts):
+        if any(part in {".git", "__pycache__", ".pytest_cache", "job-queue", ".local-skill-workbench"} or part.startswith(".pytest-") for part in relative_parts):
             continue
         if path.is_file() and path.suffix.lower() in forbidden_names:
             raise ValueError("PUBLIC_MATERIAL_FORBIDDEN")

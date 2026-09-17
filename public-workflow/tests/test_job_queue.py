@@ -60,3 +60,20 @@ def test_queue_hides_workers_with_expired_heartbeats(tmp_path: Path) -> None:
         connection.execute("UPDATE workers SET heartbeat_at=? WHERE id='worker-1'", (stale,))
 
     assert store.workers() == []
+
+
+def test_queue_recovers_a_job_after_its_worker_lease_expires(tmp_path: Path) -> None:
+    from job_queue import JobStore
+
+    store = JobStore(tmp_path / "queue")
+    job_id = store.enqueue([tmp_path / "report.pdf"], tmp_path / "state", tmp_path / "skill.zip")
+    store.claim_next("worker-1")
+    expired = (datetime.now(UTC) - timedelta(minutes=10)).isoformat(timespec="seconds")
+    with store._connect() as connection:
+        connection.execute("UPDATE jobs SET lease_at=? WHERE id=?", (expired, job_id))
+
+    recovered = store.claim_next("worker-2")
+
+    assert recovered["id"] == job_id
+    assert recovered["worker_id"] == "worker-2"
+    assert recovered["stage"] == "恢复执行"

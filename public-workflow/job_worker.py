@@ -6,6 +6,7 @@ import argparse
 import os
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 from typing import Any
@@ -29,10 +30,11 @@ def _is_worker_running(worker: dict[str, Any] | None) -> bool:
 def ensure_workers(queue_root: Path, *, count: int = 2) -> list[str]:
     """Start missing local workers; existing live workers are reused."""
     store = JobStore(queue_root)
-    existing = {str(worker["id"]): worker for worker in store.workers()}
+    existing = {str(worker["id"]): worker for worker in store.workers(include_stale=True)}
     worker_ids = [f"worker-{index}" for index in range(1, count + 1)]
     for worker_id in worker_ids:
         if _is_worker_running(existing.get(worker_id)):
+            store.register_worker(worker_id, int(existing[worker_id]["pid"]))
             continue
         subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()), "--queue-root", str(Path(queue_root)), "--worker-id", worker_id],
@@ -49,6 +51,15 @@ def process_one_job(store: JobStore, worker_id: str) -> dict[str, Any] | None:
     if job is None:
         return None
     job_id = str(job["id"])
+    stop_heartbeat = threading.Event()
+
+    def keep_lease_alive() -> None:
+        while not stop_heartbeat.wait(2):
+            store.heartbeat(worker_id)
+            store.heartbeat_job(job_id)
+
+    heartbeat_thread = threading.Thread(target=keep_lease_alive, daemon=True)
+    heartbeat_thread.start()
 
     def progress(event: dict[str, object]) -> None:
         store.update_progress(
@@ -58,6 +69,8 @@ def process_one_job(store: JobStore, worker_id: str) -> dict[str, Any] | None:
             completed_files=int(event["completed_files"]),
             total_files=int(event["total_files"]),
             progress=float(event["progress"]),
+            current_page=int(event["current_page"]) if event.get("current_page") is not None else None,
+            total_pages=int(event["total_pages"]) if event.get("total_pages") is not None else None,
         )
 
     try:
@@ -78,6 +91,9 @@ def process_one_job(store: JobStore, worker_id: str) -> dict[str, Any] | None:
         message = str(error).strip()
         error_code = message if message.replace("_", "").isalnum() and message.upper() == message else type(error).__name__.upper()
         store.fail(job_id, error_code)
+    finally:
+        stop_heartbeat.set()
+        heartbeat_thread.join(timeout=1)
     return store.get(job_id)
 
 

@@ -71,6 +71,26 @@ def test_pipeline_uses_ocr_for_only_empty_pages(tmp_path: Path) -> None:
     assert [item["text"] for item in bundle.evidence] == ["原生第一页", "OCR 第二页"]
 
 
+def test_pipeline_requests_native_ocr_for_only_missing_pages(tmp_path: Path, monkeypatch) -> None:
+    import evidence_pipeline
+
+    source = tmp_path / "mixed.pdf"
+    source.write_bytes(b"fixture")
+    requested: list[int] = []
+
+    def native_ocr(_path: Path, page_indexes: list[int] | None = None) -> dict[int, str]:
+        requested.extend(page_indexes or [])
+        return {1: " OCR\r\n第二页 "}
+
+    monkeypatch.setattr(evidence_pipeline, "_read_ocr_pages", native_ocr)
+    bundle = evidence_pipeline.build_evidence_bundle(
+        [source], tmp_path / "state", native_reader=lambda _: ["原生第一页", ""]
+    )
+
+    assert requested == [1]
+    assert [item["text"] for item in bundle.evidence] == ["原生第一页", "OCR 第二页"]
+
+
 def test_evidence_validation_rejects_uncited_or_unknown_operations() -> None:
     from evidence_pipeline import validate_evidence_backed_updates
 
@@ -144,3 +164,22 @@ def test_model_review_rejects_unsupported_operation(tmp_path: Path, monkeypatch)
     monkeypatch.setattr("urllib.request.urlopen", lambda *_args, **_kwargs: Response())
     with pytest.raises(RuntimeError, match="MODEL_SEMANTIC_REVIEW_REJECTED"):
         request_updates(bundle)
+
+
+def test_model_request_retries_transient_transport_failures(monkeypatch) -> None:
+    import skill_cli
+
+    attempts = 0
+
+    def flaky_request(*_args, **_kwargs):
+        nonlocal attempts
+        attempts += 1
+        if attempts < 3:
+            raise OSError("temporary network fault")
+        return type("Response", (), {"read": lambda self: b'{"choices":[]}', "__enter__": lambda self: self, "__exit__": lambda self, *_args: None})()
+
+    monkeypatch.setattr("urllib.request.urlopen", flaky_request)
+    monkeypatch.setattr(skill_cli.time, "sleep", lambda _seconds: None)
+
+    assert skill_cli._model_completion("https://model.example/v1", "key", {"model": "test"}) == {"choices": []}
+    assert attempts == 3

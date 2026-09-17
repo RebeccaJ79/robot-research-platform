@@ -41,6 +41,26 @@ def test_ensure_workers_starts_missing_local_processes(tmp_path: Path, monkeypat
     assert all("--queue-root" in command and "--worker-id" in command for command in launched)
 
 
+def test_ensure_workers_reuses_a_live_worker_with_a_stale_display_heartbeat(tmp_path: Path, monkeypatch) -> None:
+    from datetime import UTC, datetime, timedelta
+    from job_queue import JobStore
+    import job_worker
+
+    store = JobStore(tmp_path / "queue")
+    store.register_worker("worker-1", 4321)
+    stale = (datetime.now(UTC) - timedelta(seconds=30)).isoformat(timespec="seconds")
+    with store._connect() as connection:
+        connection.execute("UPDATE workers SET heartbeat_at=? WHERE id='worker-1'", (stale,))
+    launched: list[list[str]] = []
+    monkeypatch.setattr(job_worker, "_is_worker_running", lambda worker: worker and worker["pid"] == 4321)
+    monkeypatch.setattr(job_worker.subprocess, "Popen", lambda command, **_kwargs: launched.append(command))
+
+    job_worker.ensure_workers(tmp_path / "queue", count=1)
+
+    assert launched == []
+    assert store.workers()[0]["id"] == "worker-1"
+
+
 def test_worker_failure_keeps_private_path_out_of_task_status(tmp_path: Path, monkeypatch) -> None:
     from evidence_pipeline import EvidenceBundle
     from job_queue import JobStore

@@ -33,10 +33,13 @@ class JobStore:
                     status TEXT NOT NULL,
                     stage TEXT NOT NULL,
                     current_pdf TEXT,
+                    current_page INTEGER,
+                    total_pages INTEGER,
                     completed_files INTEGER NOT NULL DEFAULT 0,
                     total_files INTEGER NOT NULL,
                     progress REAL NOT NULL DEFAULT 0,
                     worker_id TEXT,
+                    lease_at TEXT,
                     error_code TEXT,
                     created_at TEXT NOT NULL,
                     started_at TEXT,
@@ -52,6 +55,12 @@ class JobStore:
             columns = {str(row["name"]) for row in connection.execute("PRAGMA table_info(jobs)").fetchall()}
             if "ocr_mode" not in columns:
                 connection.execute("ALTER TABLE jobs ADD COLUMN ocr_mode TEXT NOT NULL DEFAULT 'auto'")
+            if "current_page" not in columns:
+                connection.execute("ALTER TABLE jobs ADD COLUMN current_page INTEGER")
+            if "total_pages" not in columns:
+                connection.execute("ALTER TABLE jobs ADD COLUMN total_pages INTEGER")
+            if "lease_at" not in columns:
+                connection.execute("ALTER TABLE jobs ADD COLUMN lease_at TEXT")
 
     def enqueue(self, input_paths: list[Path], state_dir: Path, output_path: Path, *, ocr_mode: str = "auto") -> str:
         if not input_paths:
@@ -71,6 +80,12 @@ class JobStore:
     def claim_next(self, worker_id: str) -> dict[str, Any] | None:
         with self._connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
+            expired = (datetime.now(UTC) - timedelta(minutes=2)).isoformat(timespec="seconds")
+            connection.execute(
+                "UPDATE jobs SET status='queued', stage='恢复执行', worker_id=NULL, lease_at=NULL "
+                "WHERE status='running' AND lease_at IS NOT NULL AND lease_at < ?",
+                (expired,),
+            )
             row = connection.execute(
                 """SELECT * FROM jobs AS candidate
                 WHERE candidate.status = 'queued'
@@ -83,9 +98,10 @@ class JobStore:
             ).fetchone()
             if row is None:
                 return None
+            stage = "恢复执行" if row["stage"] == "恢复执行" else "等待解析"
             connection.execute(
-                "UPDATE jobs SET status='running', stage='等待解析', worker_id=?, started_at=? WHERE id=?",
-                (worker_id, _now(), row["id"]),
+                "UPDATE jobs SET status='running', stage=?, worker_id=?, lease_at=?, started_at=COALESCE(started_at, ?) WHERE id=?",
+                (stage, worker_id, _now(), _now(), row["id"]),
             )
             return self.get(str(row["id"]), connection=connection)
 
@@ -98,6 +114,8 @@ class JobStore:
         completed_files: int | None = None,
         total_files: int | None = None,
         progress: float | None = None,
+        current_page: int | None = None,
+        total_pages: int | None = None,
     ) -> None:
         updates: dict[str, Any] = {"stage": stage}
         if current_pdf is not None:
@@ -108,6 +126,10 @@ class JobStore:
             updates["total_files"] = total_files
         if progress is not None:
             updates["progress"] = max(0.0, min(1.0, progress))
+        if current_page is not None:
+            updates["current_page"] = current_page
+        if total_pages is not None:
+            updates["total_pages"] = total_pages
         columns = ", ".join(f"{name}=?" for name in updates)
         with self._connect() as connection:
             connection.execute(f"UPDATE jobs SET {columns} WHERE id=?", (*updates.values(), job_id))
@@ -118,6 +140,10 @@ class JobStore:
                 "UPDATE jobs SET status='completed', stage='已完成', progress=1, finished_at=? WHERE id=?",
                 (_now(), job_id),
             )
+
+    def heartbeat_job(self, job_id: str) -> None:
+        with self._connect() as connection:
+            connection.execute("UPDATE jobs SET lease_at=? WHERE id=? AND status='running'", (_now(), job_id))
 
     def fail(self, job_id: str, error_code: str) -> None:
         with self._connect() as connection:
@@ -152,11 +178,11 @@ class JobStore:
             rows = connection.execute("SELECT * FROM jobs ORDER BY created_at DESC LIMIT ?", (limit,)).fetchall()
         return [self._job_dict(row) for row in rows]
 
-    def workers(self, *, heartbeat_max_age_seconds: int = 5) -> list[dict[str, Any]]:
+    def workers(self, *, heartbeat_max_age_seconds: int = 5, include_stale: bool = False) -> list[dict[str, Any]]:
         with self._connect() as connection:
             rows = [dict(row) for row in connection.execute("SELECT * FROM workers ORDER BY id").fetchall()]
         cutoff = datetime.now(UTC) - timedelta(seconds=heartbeat_max_age_seconds)
-        return [row for row in rows if datetime.fromisoformat(str(row["heartbeat_at"])) >= cutoff]
+        return rows if include_stale else [row for row in rows if datetime.fromisoformat(str(row["heartbeat_at"])) >= cutoff]
 
     def _connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self.database, timeout=10)

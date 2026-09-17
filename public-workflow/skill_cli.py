@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import time
 import urllib.request
 from collections.abc import Callable
 from pathlib import Path
@@ -122,20 +123,25 @@ def review_updates(updates: list[dict[str, Any]], evidence: EvidenceBundle, *, b
         raise RuntimeError("MODEL_SEMANTIC_REVIEW_REJECTED")
 
 
-def _model_completion(base: str, key: str, body: dict[str, Any]) -> dict[str, Any]:
+def _model_completion(base: str, key: str, body: dict[str, Any], *, attempts: int = 3) -> dict[str, Any]:
     request = urllib.request.Request(
         f"{base}/chat/completions",
         data=json.dumps(body).encode("utf-8"),
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
     )
-    try:
-        with urllib.request.urlopen(request, timeout=60) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        raise RuntimeError("MODEL_REQUEST_FAILED") from error
-    if not isinstance(payload, dict):
-        raise RuntimeError("MODEL_OUTPUT_INVALID")
-    return payload
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            if attempt == attempts - 1:
+                raise RuntimeError("MODEL_REQUEST_FAILED") from error
+            time.sleep(2**attempt)
+            continue
+        if not isinstance(payload, dict):
+            raise RuntimeError("MODEL_OUTPUT_INVALID")
+        return payload
+    raise RuntimeError("MODEL_REQUEST_FAILED")
 
 
 def _fingerprint(path: Path) -> str:
