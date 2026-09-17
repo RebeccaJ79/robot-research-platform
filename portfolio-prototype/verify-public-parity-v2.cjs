@@ -17,6 +17,6 @@ assert(html.includes('本期涨跌幅 = 最新有效交易日收盘价'), 'compa
 assert(html.includes('function graphPositions(nodes,height)'), 'secondary graph cards must position relative to their primary parent');
 assert(html.includes("symbol:'roundRect'"), 'primary and secondary graph nodes must be card-shaped');
 assert(html.includes('class="mind-map-wrap"'), 'graph canvas must retain a horizontal scroll wrapper on narrow screens');
-assert(html.includes('.mind-map{width:1080px;min-width:1080px'), 'graph canvas must preserve the local minimum width');
+assert(html.includes('.mind-map{width:1260px;min-width:1260px'), 'graph canvas must preserve the widened stage spacing');
 
 console.log('PASS: public reports and graph meet the local-layout parity contract.');
