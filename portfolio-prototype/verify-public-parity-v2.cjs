@@ -8,7 +8,7 @@ assert(html.includes('title:{left:0,'), 'every chart title must explicitly align
 assert(html.includes('chain-stage-head'), 'transmission must render the upstream/midstream/downstream header row');
 assert(html.includes('function stageCell(item,stage)'), 'transmission cards must remain classified by industry stage');
 assert(html.includes('class="chain-flow"'), 'transmission must place cards and arrows in one shared flow row');
-assert(html.includes('class="flow-arrow"'), 'relation arrow must render between node cards');
+assert(html.includes("'flow-arrow'"), 'relation arrow must render between node cards');
 assert(!html.includes('class="chain-link"'), 'relation arrow must not be rendered below node cards');
 assert(html.includes('function companyNodeDisplay(row)'), 'company table must preserve grouped node labels');
 assert(html.includes('function amountDisplay(value)'), 'company table must render amount direction semantics');
