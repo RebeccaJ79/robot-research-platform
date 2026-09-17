@@ -35,6 +35,28 @@ python -m venv .venv
   --output "C:\research\skill-package.zip"
 ```
 
+## 后台任务与实时进度
+
+需要让 agent 提交任务、持续查看进度，或让多位使用者共享同一台电脑时，使用队列入口。首次提交会自动启动两个本地 worker：不同 `--state` 目录可同时执行；同一 `--state` 目录只会有一个写入任务。
+
+```powershell
+.\.venv\Scripts\python.exe job_cli.py submit `
+  --pdf "C:\research\report-a.pdf" `
+  --queue-root "C:\research\job-queue" `
+  --state "C:\research\robot-skill-state" `
+  --output "C:\research\skill-package.zip"
+```
+
+命令输出任务 ID。agent 应轮询状态，而不是猜测 worker 是否运行：
+
+```powershell
+.\.venv\Scripts\python.exe job_cli.py status `
+  --queue-root "C:\research\job-queue" `
+  --job-id "任务 ID"
+```
+
+状态会包含 `status`、`stage`、`current_pdf`、`completed_files`、`progress`、`worker_id` 和 `error_code`。看到不同任务同时处于 `running`，且 `worker_id` 分别为 `worker-1`、`worker-2`，即表示本地并发 worker 正在工作；同一状态目录的后续任务保持 `queued` 是预期的写入保护。
+
 同一个 `--state` 会保留当前有效 Skill、历史版本及 PDF 指纹。后续新 PDF 会在原有六个固定父维度内更新；重复 PDF 不会重复处理。每次成功执行都导出一个完整的 `skill-package.zip`。
 
 需要离线演示或回归验证时，使用仓库样例更新，不调用模型：

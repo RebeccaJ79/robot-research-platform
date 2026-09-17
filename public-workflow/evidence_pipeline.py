@@ -28,7 +28,15 @@ class EvidenceBundle:
         return [{"evidence_id": item["evidence_id"], "page": item["page"], "text": item["text"]} for item in self.evidence]
 
 
-def build_evidence_bundle(pdf_paths: list[Path], state_dir: Path, *, native_reader: PageReader | None = None, ocr_reader: PageReader | None = None, ocr_mode: str = "auto") -> EvidenceBundle:
+def build_evidence_bundle(
+    pdf_paths: list[Path],
+    state_dir: Path,
+    *,
+    native_reader: PageReader | None = None,
+    ocr_reader: PageReader | None = None,
+    ocr_mode: str = "auto",
+    progress_callback: Callable[[dict[str, object]], None] | None = None,
+) -> EvidenceBundle:
     """Write reproducible local Markdown/evidence artifacts for caller-owned PDFs."""
     if ocr_mode not in {"auto", "off", "force"}:
         raise ValueError("OCR_MODE_INVALID")
@@ -38,13 +46,18 @@ def build_evidence_bundle(pdf_paths: list[Path], state_dir: Path, *, native_read
     native_reader = native_reader or _read_native_pages
     documents: list[dict[str, object]] = []
     evidence: list[dict[str, object]] = []
-    for source in pdf_paths:
+    total_files = len(pdf_paths)
+    for index, source in enumerate(pdf_paths, start=1):
         source = Path(source)
+        if progress_callback:
+            progress_callback({"stage": "解析 PDF", "file_name": source.name, "completed_files": index - 1, "total_files": total_files, "progress": (index - 1) / total_files * 0.6})
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
         native_pages = [] if ocr_mode == "force" else native_reader(source)
         pages = [_clean_page(page) for page in native_pages]
         needs_ocr = ocr_mode == "force" or not pages or any(not _meaningful(page) for page in pages)
         if needs_ocr:
+            if progress_callback:
+                progress_callback({"stage": "OCR", "file_name": source.name, "completed_files": index - 1, "total_files": total_files, "progress": (index - 1) / total_files * 0.6 + 0.15 / total_files})
             if ocr_mode == "off":
                 raise ValueError("PDF_TEXT_EXTRACTION_EMPTY")
             reader = ocr_reader or _read_ocr_pages
@@ -64,6 +77,8 @@ def build_evidence_bundle(pdf_paths: list[Path], state_dir: Path, *, native_read
         entries = _extract_evidence(digest, pages)
         evidence.extend(entries)
         (evidence_dir / f"{digest}.json").write_text(json.dumps({"document": document, "evidence": entries}, ensure_ascii=False, indent=2), encoding="utf-8")
+        if progress_callback:
+            progress_callback({"stage": "证据完成", "file_name": source.name, "completed_files": index, "total_files": total_files, "progress": index / total_files * 0.6})
     return EvidenceBundle(documents=documents, evidence=evidence)
 
 

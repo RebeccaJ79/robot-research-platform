@@ -228,3 +228,5 @@ logs/
 hermes_skill_output/
 robot_evidence_pipeline/
 public-workflow/output/
+public-workflow/.local-skill-workbench/
+public-workflow/job-queue/

@@ -26,6 +26,25 @@ def test_pipeline_writes_normalized_page_markdown_and_evidence(tmp_path: Path) -
     assert {item["page"] for item in bundle.evidence} == {1, 2}
 
 
+def test_pipeline_reports_each_pdf_parse_progress(tmp_path: Path) -> None:
+    from evidence_pipeline import build_evidence_bundle
+
+    first, second = tmp_path / "first.pdf", tmp_path / "second.pdf"
+    first.write_bytes(b"first")
+    second.write_bytes(b"second")
+    events: list[dict[str, object]] = []
+
+    build_evidence_bundle(
+        [first, second], tmp_path / "state",
+        native_reader=lambda source: [source.stem],
+        progress_callback=events.append,
+    )
+
+    assert events[0]["stage"] == "解析 PDF"
+    assert events[0]["file_name"] == "first.pdf"
+    assert events[-1] == {"stage": "证据完成", "file_name": "second.pdf", "completed_files": 2, "total_files": 2, "progress": 0.6}
+
+
 def test_pipeline_uses_local_ocr_when_native_text_is_empty(tmp_path: Path) -> None:
     from evidence_pipeline import build_evidence_bundle
 

@@ -25,6 +25,10 @@ streamlit run local_workbench.py
 
 浏览器会打开本地地址。上传的 PDF 只交给本机程序处理；本地工作台复用下方同一套命令行生成核心。
 
+点击生成后，PDF 会进入本地队列，工作台每秒刷新任务状态。每一份 PDF 都显示“排队中、解析 PDF、OCR、证据完成”等阶段；任务会显示当前 PDF、已完成数量、百分比、worker ID 和错误代码。首次提交自动启动两个本地 worker。不同 Skill 库目录可并发处理，同一目录会按顺序写入，避免版本覆盖。
+
+不使用网页时，Codex、Hermes 等 agent 可通过 [`job_cli.py`](AGENTS.md#后台任务与实时进度) 提交任务并查询 JSON 状态。
+
 OCR 仅在本机执行。除 Python 依赖外，请安装 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) 并确保 `tesseract` 在 `PATH` 中；默认语言为简体中文和英文（`chi_sim+eng`）。
 
 使用用户自己的 PDF 和离线样例更新运行：

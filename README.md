@@ -30,6 +30,8 @@ Markdown 与证据索引仅保存在使用者的本地 `--state` 目录，不写
 
 Codex、Hermes 等本地 agent 可遵循 [`public-workflow/AGENTS.md`](public-workflow/AGENTS.md) 的执行契约，使用同一命令行入口生成 ZIP。
 
+本地工作台会自动启动两个本地 worker，并实时显示每份 PDF 的解析、OCR、证据、模型校验和 ZIP 导出进度；worker 与任务状态均保存在使用者电脑的本地队列中。
+
 ## 本地运行
 
 ```powershell
