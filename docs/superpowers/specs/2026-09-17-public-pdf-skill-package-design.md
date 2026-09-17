@@ -68,24 +68,29 @@ description. The five reference files must be valid YAML mappings.
 
 ```mermaid
 flowchart LR
-  PDF[User PDF] --> Parse[Page-marked local text extraction]
-  Parse --> Input[Public model input]
+  PDF[User PDF] --> Parse[Local clean page Markdown]
+  Parse --> Evidence[Page-cited local evidence index]
+  Evidence --> Input[Public model input]
   Input --> Model[User-configured model endpoint]
   Model --> Validate[Package contract validation]
   Validate --> Zip[skill-package.zip]
 ```
 
-The parser first extracts native text using a public dependency. If the PDF has
-no meaningful native text, the CLI reports `PDF_TEXT_EXTRACTION_EMPTY`; it does
-not upload the PDF to an OCR service. The first public release deliberately
-does not support OCR because it would add an unpinned native dependency and
-substantially reduce reproducibility.
+The parser first extracts native text using a public dependency, then applies
+deterministic Unicode, whitespace and consecutive-line cleanup before writing
+page-marked Markdown under the local state directory. It extracts stable,
+page-cited evidence entries from that Markdown. If native text has no meaningful
+content, the CLI runs local Tesseract OCR through pinned Python dependencies; it
+never uploads the PDF to an OCR service. Missing OCR dependencies or a missing
+Tesseract executable produce explicit remediation errors.
 
 Offline mode accepts a supplied structured fixture instead of calling a model,
 so contributors can run the full package, an incremental update, and ZIP
 validation without a key or network access. Online mode reads `MODEL_API_KEY`,
 `MODEL_BASE_URL`, and the optional `MODEL_NAME` from the caller's environment
-and sends the user text only to the configured OpenAI-compatible endpoint.
+and sends only the page-cited evidence fragments to the configured
+OpenAI-compatible endpoint. Every proposed operation must cite valid local
+evidence IDs before package validation can proceed.
 
 Before generation, the CLI deduplicates PDFs using a local SHA-256 fingerprint
 registry. It routes new content to the six fixed parents, gives the model only

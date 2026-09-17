@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile
 
+from evidence_pipeline import EvidenceBundle, build_evidence_bundle, validate_evidence_backed_updates
 from skill_package import apply_updates, initialize_state, validate_skill_tree
 
 
@@ -62,7 +63,7 @@ def extract_pdf_text(pdf_path: Path) -> str:
     return text
 
 
-def request_updates(pdf_texts: list[str]) -> list[dict[str, Any]]:
+def request_updates(evidence: EvidenceBundle) -> list[dict[str, Any]]:
     """Ask only the caller-selected endpoint for public registry operations."""
     key = os.environ.get("MODEL_API_KEY")
     base = os.environ.get("MODEL_BASE_URL", "").rstrip("/")
@@ -75,8 +76,8 @@ def request_updates(pdf_texts: list[str]) -> list[dict[str, Any]]:
         "response_format": {"type": "json_object"},
         "messages": [{
             "role": "system",
-            "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Each update contains public registry operations. Never return credentials, local paths, PDF quotations, raw model reasoning, or a new parent ID.",
-        }, {"role": "user", "content": json.dumps({"pdf_texts": pdf_texts}, ensure_ascii=False)}],
+            "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Every operation must include a non-empty evidence_ids array containing only supplied evidence IDs. Never return credentials, local paths, PDF quotations, raw model reasoning, or a new parent ID.",
+        }, {"role": "user", "content": json.dumps({"evidence": evidence.model_payload()}, ensure_ascii=False)}],
     }
     request = urllib.request.Request(
         f"{base}/chat/completions",
@@ -91,6 +92,7 @@ def request_updates(pdf_texts: list[str]) -> list[dict[str, Any]]:
         raise RuntimeError("MODEL_OUTPUT_INVALID") from error
     if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
         raise RuntimeError("MODEL_OUTPUT_INVALID")
+    validate_evidence_backed_updates(updates, evidence.evidence_ids)
     return updates
 
 
@@ -134,16 +136,19 @@ def main() -> None:
     parser.add_argument("--state", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--offline-updates", type=Path)
+    parser.add_argument("--ocr", choices=("auto", "off", "force"), default="auto")
     args = parser.parse_args()
+    bundle = build_evidence_bundle(args.pdf, args.state, ocr_mode=args.ocr)
     if args.offline_updates:
         payload = json.loads(args.offline_updates.read_text(encoding="utf-8"))
         updates = payload.get("updates") if isinstance(payload, dict) else None
         if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
             raise RuntimeError("OFFLINE_UPDATES_INVALID")
     else:
-        texts = [extract_pdf_text(path) for path in args.pdf]
-        updates = request_updates(texts)
-    print(run(args.pdf, args.state, args.output, updates))
+        updates = request_updates(bundle)
+    # Evidence preparation above has already validated native extraction or local OCR.
+    # Avoid a second native-only extraction that would reject a successfully OCRed PDF.
+    print(run(args.pdf, args.state, args.output, updates, text_extractor=lambda _path: "prepared local evidence"))
 
 
 if __name__ == "__main__":

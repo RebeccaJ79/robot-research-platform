@@ -20,18 +20,13 @@
 
 已实现的步骤：
 
-1. 使用 `pypdf` 在本机提取**原生文本 PDF**，并以 `<!-- PAGE_START: n -->` / `<!-- PAGE_END: n -->` 保留页码边界。
-2. 将页码文本发送到使用者自行配置的 OpenAI 兼容模型端点，请求六个固定父维度内的结构化更新操作。
-3. 对模型更新做固定父维度、操作引用、Skill 文件结构与敏感内容校验；失败时保留上一个有效版本。
-4. 导出仅含 `skills/`、`SKILL.md`、`contract.json` 和 `references/` 的 ZIP 包。
+1. 在本机提取 PDF 原生文本，进行确定性 Unicode、空白和连续重复行清洗，并落盘为带页码的规范化 Markdown。
+2. 原生文本为空时，可使用本地 Tesseract OCR 生成同样的页码 Markdown；不会将 PDF 上传到 OCR 服务。
+3. 从清洗文本中提取带 `evidence_id`、页码和片段的结构化证据索引，并只将这些证据片段发送到使用者自行配置的 OpenAI 兼容模型端点。
+4. 要求模型每项更新引用已有 evidence ID，再对固定父维度、操作引用、Skill 文件结构与敏感内容校验；失败时保留上一个有效版本。
+5. 导出仅含 `skills/`、`SKILL.md`、`contract.json` 和 `references/` 的 ZIP 包。
 
-尚未实现的步骤：
-
-- 确定性正文清洗、分段去重和规范化 Markdown 文件落盘。
-- 可引用的证据提取（证据片段、页码、出处结构化保存）及基于证据的语义校验。
-- OCR；扫描件或没有可提取文本的 PDF 会失败。
-
-因此，当前版本**不能**如实称为“PDF→确定性清洗与证据提取→Skill”的完整链路。详情、安装与命令示例见 [`public-workflow/README.md`](public-workflow/README.md)。
+Markdown 与证据索引仅保存在使用者的本地 `--state` 目录，不写入 ZIP；扫描 PDF 需要本机安装 Tesseract。详情、安装、真实端点 smoke test 与故障排查见 [`public-workflow/README.md`](public-workflow/README.md)。
 
 ## 本地运行
 
