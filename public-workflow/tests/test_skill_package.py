@@ -11,11 +11,22 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
 
-def test_initialization_creates_no_parent_until_a_valid_update(tmp_path: Path) -> None:
-    """A blank workspace must not invent any of the six research methods."""
-    from skill_package import initialize_state
+def test_new_skill_state_always_contains_the_six_fixed_parent_skills(tmp_path: Path) -> None:
+    from skill_package import PARENTS, initialize_state, validate_skill_tree
 
-    assert list((initialize_state(tmp_path) / "skills").iterdir()) == []
+    root = initialize_state(tmp_path / "state")
+
+    assert sorted(path.name for path in (root / "skills").iterdir()) == sorted(PARENTS.values())
+    validate_skill_tree(root)
+
+
+def test_initialization_creates_fixed_parent_shells_without_child_methods(tmp_path: Path) -> None:
+    """A blank workspace ships six parent shells but no invented child methods."""
+    from skill_package import initialize_state, load_skill_context
+
+    initialize_state(tmp_path)
+
+    assert all(not entry["children"] for entry in load_skill_context(tmp_path))
 
 
 def test_updates_reject_an_unknown_fixed_parent(tmp_path: Path) -> None:
@@ -107,6 +118,7 @@ def test_incremental_update_can_extend_and_revise_an_existing_child_dimension(tm
 def test_batch_of_two_pdfs_produces_one_zip_with_fixed_parent_package(tmp_path: Path) -> None:
     """Two inputs belong to one versioned library download, never two ZIPs."""
     from skill_cli import run
+    from skill_package import PARENTS
 
     first, second = tmp_path / "a.pdf", tmp_path / "b.pdf"
     first.write_bytes(b"first pdf")
@@ -122,15 +134,9 @@ def test_batch_of_two_pdfs_produces_one_zip_with_fixed_parent_package(tmp_path: 
 
     assert target == tmp_path / "skill-package.zip"
     with ZipFile(target) as archive:
-        assert sorted(archive.namelist()) == [
-            "skills/市场需求与应用空间/SKILL.md",
-            "skills/市场需求与应用空间/contract.json",
-            "skills/市场需求与应用空间/references/analysis-rules.yaml",
-            "skills/市场需求与应用空间/references/child-dimensions.yaml",
-            "skills/市场需求与应用空间/references/indicator-catalog.yaml",
-            "skills/市场需求与应用空间/references/research-model.yaml",
-            "skills/市场需求与应用空间/references/source-traceability.yaml",
-        ]
+        names = archive.namelist()
+        assert len(names) == 42
+        assert all(f"skills/{name}/SKILL.md" in names for name in PARENTS.values())
 
 
 def test_cited_operation_exports_page_reference_without_pdf_or_path(tmp_path: Path) -> None:

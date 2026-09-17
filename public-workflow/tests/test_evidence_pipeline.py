@@ -142,6 +142,31 @@ def test_model_request_accepts_only_cited_updates(tmp_path: Path, monkeypatch) -
     assert target.is_file()
 
 
+def test_model_request_repairs_an_invalid_evidence_quote(tmp_path: Path, monkeypatch) -> None:
+    from evidence_pipeline import build_evidence_bundle
+    from skill_cli import request_updates
+
+    source = tmp_path / "report.pdf"
+    source.write_bytes(b"fixture")
+    bundle = build_evidence_bundle([source], tmp_path / "state", native_reader=lambda _: ["订单增长"])
+    evidence_id = bundle.evidence[0]["evidence_id"]
+    invalid = '{"choices":[{"message":{"content":"{\\"updates\\":[{\\"parent_id\\":\\"market-demand\\",\\"operations\\":[{\\"operation\\":\\"add_dimension\\",\\"dimension\\":{\\"id\\":\\"order-growth\\",\\"name\\":\\"订单增长\\"},\\"indicators\\":[],\\"rules\\":[],\\"research_models\\":[],\\"evidence\\":[{\\"evidence_id\\":\\"' + evidence_id + '\\",\\"quote\\":\\"不是原文\\"}]}]}]}"}}]}'
+    corrected = '{"choices":[{"message":{"content":"{\\"updates\\":[{\\"parent_id\\":\\"market-demand\\",\\"operations\\":[{\\"operation\\":\\"add_dimension\\",\\"dimension\\":{\\"id\\":\\"order-growth\\",\\"name\\":\\"订单增长\\"},\\"indicators\\":[],\\"rules\\":[],\\"research_models\\":[],\\"evidence\\":[{\\"evidence_id\\":\\"' + evidence_id + '\\",\\"quote\\":\\"订单增长\\"}]}]}]}"}}]}'
+    reviewed = '{"choices":[{"message":{"content":"{\\"approved\\":[true]}"}}]}'
+    responses = [invalid, corrected, reviewed]
+
+    class Response:
+        def read(self) -> bytes: return responses.pop(0).encode()
+        def __enter__(self): return self
+        def __exit__(self, *_args): return None
+
+    monkeypatch.setenv("MODEL_API_KEY", "user-key")
+    monkeypatch.setattr("urllib.request.urlopen", lambda *_args, **_kwargs: Response())
+
+    assert request_updates(bundle)[0]["operations"][0]["evidence"][0]["quote"] == "订单增长"
+    assert responses == []
+
+
 def test_model_review_rejects_unsupported_operation(tmp_path: Path, monkeypatch) -> None:
     from evidence_pipeline import build_evidence_bundle
     from skill_cli import request_updates

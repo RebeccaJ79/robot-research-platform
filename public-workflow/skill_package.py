@@ -38,6 +38,10 @@ def initialize_state(state_dir: Path) -> Path:
     """Create and return a blank local package state without inventing methods."""
     root = Path(state_dir) / "current"
     (root / "skills").mkdir(parents=True, exist_ok=True)
+    for parent_id in PARENTS:
+        package = root / "skills" / PARENTS[parent_id]
+        if not package.exists():
+            _write_parent_package(package, parent_id)
     return root
 
 

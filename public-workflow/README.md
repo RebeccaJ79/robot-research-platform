@@ -6,7 +6,7 @@
 
 若由 Codex、Hermes 或其他本地 agent 执行，请先阅读 [`AGENTS.md`](AGENTS.md)；其中规定了输入输出、密钥、隐私边界和成功校验。
 
-一次可输入任意数量的本地 PDF，输出一个完整的 `skill-package.zip`。程序会将每份 PDF 清洗为本地、带页码的 Markdown，并生成带 `evidence_id`、页码和文本片段的本地证据索引；二者均保存在 `--state` 目录，不进入 ZIP。其中的 `skills/` 只包含六个固定父维度中已有有效方法的目录：市场需求与应用空间、技术路线与产品能力、产业链与供给能力、商业化落地与量产进程、竞争格局与公司基本面、估值与投资判断。
+一次可输入任意数量的本地 PDF，输出一个完整的 `skill-package.zip`。程序会将每份 PDF 清洗为本地、带页码的 Markdown，并生成带 `evidence_id`、页码和文本片段的本地证据索引；二者均保存在 `--state` 目录，不进入 ZIP。ZIP 始终包含六个固定父维度的 Skill 目录：市场需求与应用空间、技术路线与产品能力、产业链与供给能力、商业化落地与量产进程、竞争格局与公司基本面、估值与投资判断；没有被证据支持的方法保持为空，不会被编造。
 
 同一个 `--state` 目录保存当前有效版本、历史版本和已处理 PDF 指纹。后续输入新 PDF 时，程序在当前版本上更新子维度、指标、规则和研究模型；重复 PDF 不重复添加。每次成功运行都会重新导出一个完整 ZIP。
 
@@ -72,9 +72,9 @@ ZIP 只包含 `SKILL.md`、`contract.json` 和 `references/` 下的通用方法�
 | `PDF_TEXT_EXTRACTION_EMPTY` | PDF 没有原生文本且使用了 `--ocr off`；改用默认 `--ocr auto`。 |
 | `OCR_DEPENDENCIES_REQUIRED` | 未安装 `PyMuPDF` 或 `pytesseract`；重新执行依赖安装。 |
 | `TESSERACT_REQUIRED` | 未安装 Tesseract 或未加入 `PATH`；安装后重新打开命令行。 |
-| `EVIDENCE_CITATION_REQUIRED` / `EVIDENCE_CITATION_UNKNOWN` / `EVIDENCE_QUOTE_INVALID` | 模型没有为每项操作提供有效 evidence ID 或逐字短引；检查模型是否支持 JSON 输出。 |
+| `EVIDENCE_CITATION_REQUIRED` / `EVIDENCE_CITATION_UNKNOWN` / `EVIDENCE_QUOTE_INVALID` | 模型没有为每项操作提供有效 evidence ID 或逐字短引；程序会要求模型最多纠正两次，仍失败时保留原 Skill。 |
 | `MODEL_SEMANTIC_REVIEW_REJECTED` | 第二次模型复核认为引文不足以支持该方法更新；保留原 Skill，换更具体的 PDF 或重新运行。 |
-| `MODEL_*_REQUIRED` / `MODEL_OUTPUT_INVALID` / `MODEL_REQUEST_FAILED` | 检查当前 PowerShell 的 DeepSeek 或通用模型变量、OpenAI 兼容 `/chat/completions` 地址和模型 JSON 输出能力。 |
+| `MODEL_*_REQUIRED` / `MODEL_OUTPUT_INVALID` / `MODEL_REQUEST_FAILED` | 检查当前 PowerShell 的 DeepSeek 或通用模型变量、OpenAI 兼容 `/chat/completions` 地址和模型 JSON 输出能力；临时网络故障会自动重试两次。 |
 
 ## JSON → 公开展示快照
 

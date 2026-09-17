@@ -78,24 +78,33 @@ def request_updates(evidence: EvidenceBundle, current_context: list[dict[str, An
         raise RuntimeError("MODEL_API_KEY_REQUIRED")
     if not base:
         raise RuntimeError("MODEL_BASE_URL_REQUIRED")
-    request_body = {
-        "model": os.environ.get("MODEL_NAME") or os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat",
-        "response_format": {"type": "json_object"},
-        "messages": [{
-            "role": "system",
-            "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Each update is {parent_id, operations}. operation MUST be exactly one of add_dimension, replace_dimension, add_indicator, add_rule, replace_rule, add_research_model, replace_indicator, replace_research_model, add_alias, merge_dimension, deprecate_dimension. For a new method use add_dimension with dimension:{id,name}, indicators:[], rules:[], research_models:[]; for a later addition use add_indicator with dimension_id and indicator:{id,name}. Do not invent operation names, wrapper fields, parent IDs, IDs not present in current_skill_context, or existing children. Every operation must include a non-empty evidence array of {evidence_id, quote}; quote must be an exact short substring of that evidence (max 180 characters). Never return credentials, local paths, long PDF quotations, raw model reasoning, or a new parent ID.",
-        }, {"role": "user", "content": json.dumps({"evidence": evidence.model_payload(), "current_skill_context": current_context or []}, ensure_ascii=False)}],
-    }
-    payload = _model_completion(base, key, request_body)
-    try:
-        updates = json.loads(payload["choices"][0]["message"]["content"])["updates"]
-    except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
-        raise RuntimeError("MODEL_OUTPUT_INVALID") from error
-    if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
-        raise RuntimeError("MODEL_OUTPUT_INVALID")
-    validated = attach_evidence_locations(updates, evidence)
-    review_updates(validated, evidence, base=base, key=key)
-    return validated
+    correction = ""
+    for attempt in range(3):
+        request_body = {
+            "model": os.environ.get("MODEL_NAME") or os.environ.get("DEEPSEEK_MODEL") or "deepseek-chat",
+            "response_format": {"type": "json_object"},
+            "messages": [{
+                "role": "system",
+                "content": "Return JSON only: {\"updates\":[...]}. Route robot-industry methods only to six fixed parents: market-demand, technology-product, supply-chain, commercialization, company-fundamentals, valuation-investment. Each update is {parent_id, operations}. operation MUST be exactly one of add_dimension, replace_dimension, add_indicator, add_rule, replace_rule, add_research_model, replace_indicator, replace_research_model, add_alias, merge_dimension, deprecate_dimension. For a new method use add_dimension with dimension:{id,name}, indicators:[], rules:[], research_models:[]; for a later addition use add_indicator with dimension_id and indicator:{id,name}. Do not invent operation names, wrapper fields, parent IDs, IDs not present in current_skill_context, or existing children. Every operation must include a non-empty evidence array of {evidence_id, quote}; quote must be an exact short substring of that evidence (max 180 characters). Never return credentials, local paths, long PDF quotations, raw model reasoning, or a new parent ID.",
+            }, {"role": "user", "content": json.dumps({"evidence": evidence.model_payload(), "current_skill_context": current_context or [], "correction": correction}, ensure_ascii=False)}],
+        }
+        payload = _model_completion(base, key, request_body)
+        try:
+            updates = json.loads(payload["choices"][0]["message"]["content"])["updates"]
+        except (KeyError, IndexError, TypeError, json.JSONDecodeError) as error:
+            raise RuntimeError("MODEL_OUTPUT_INVALID") from error
+        if not isinstance(updates, list) or not all(isinstance(item, dict) for item in updates):
+            raise RuntimeError("MODEL_OUTPUT_INVALID")
+        try:
+            validated = attach_evidence_locations(updates, evidence)
+        except ValueError as error:
+            if str(error) not in {"EVIDENCE_CITATION_REQUIRED", "EVIDENCE_CITATION_UNKNOWN", "EVIDENCE_QUOTE_INVALID"} or attempt == 2:
+                raise
+            correction = f"Previous output was rejected with {error}. Return a complete replacement JSON. Each quote must be copied exactly from the cited evidence text."
+            continue
+        review_updates(validated, evidence, base=base, key=key)
+        return validated
+    raise RuntimeError("MODEL_OUTPUT_INVALID")
 
 
 def review_updates(updates: list[dict[str, Any]], evidence: EvidenceBundle, *, base: str, key: str) -> None:

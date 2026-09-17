@@ -54,11 +54,21 @@ def test_ensure_workers_reuses_a_live_worker_with_a_stale_display_heartbeat(tmp_
     launched: list[list[str]] = []
     monkeypatch.setattr(job_worker, "_is_worker_running", lambda worker: worker and worker["pid"] == 4321)
     monkeypatch.setattr(job_worker.subprocess, "Popen", lambda command, **_kwargs: launched.append(command))
+    monkeypatch.setattr(JobStore, "register_worker", lambda *_args: (_ for _ in ()).throw(AssertionError("live worker must only heartbeat")))
 
     job_worker.ensure_workers(tmp_path / "queue", count=1)
 
     assert launched == []
     assert store.workers()[0]["id"] == "worker-1"
+
+
+def test_worker_liveness_check_uses_windows_fallback_after_system_error(monkeypatch) -> None:
+    import job_worker
+
+    monkeypatch.setattr(job_worker.os, "kill", lambda *_args: (_ for _ in ()).throw(SystemError("WinError 87")))
+    monkeypatch.setattr(job_worker, "_windows_pid_running", lambda _pid: True)
+
+    assert job_worker._is_worker_running({"pid": 4321}) is True
 
 
 def test_worker_failure_keeps_private_path_out_of_task_status(tmp_path: Path, monkeypatch) -> None:

@@ -17,11 +17,29 @@ from skill_cli import fresh_pdf_paths, request_updates, run
 from skill_package import load_skill_context
 
 
+def _windows_pid_running(pid: int) -> bool:
+    """Use the Windows process handle API when os.kill(pid, 0) is unreliable."""
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+
+        handle = ctypes.windll.kernel32.OpenProcess(0x1000, False, pid)
+        if not handle:
+            return False
+        ctypes.windll.kernel32.CloseHandle(handle)
+        return True
+    except (AttributeError, OSError):
+        return False
+
+
 def _is_worker_running(worker: dict[str, Any] | None) -> bool:
     if not worker:
         return False
     try:
         os.kill(int(worker["pid"]), 0)
+    except SystemError:
+        return _windows_pid_running(int(worker["pid"]))
     except (OSError, ValueError, TypeError):
         return False
     return True
@@ -34,7 +52,7 @@ def ensure_workers(queue_root: Path, *, count: int = 2) -> list[str]:
     worker_ids = [f"worker-{index}" for index in range(1, count + 1)]
     for worker_id in worker_ids:
         if _is_worker_running(existing.get(worker_id)):
-            store.register_worker(worker_id, int(existing[worker_id]["pid"]))
+            store.heartbeat(worker_id)
             continue
         subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()), "--queue-root", str(Path(queue_root)), "--worker-id", worker_id],
