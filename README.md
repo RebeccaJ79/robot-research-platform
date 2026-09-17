@@ -32,29 +32,37 @@ Codex、Hermes 等本地 agent 可遵循 [`public-workflow/AGENTS.md`](public-wo
 
 本地工作台会自动启动两个本地 worker，并实时显示每份 PDF 的解析、OCR、证据、模型校验和 ZIP 导出进度；worker 与任务状态均保存在使用者电脑的本地队列中。
 
-### 本地工作台流程
+### 可复现的 PDF → Skill 工作流
 
-下图中的所有数据和进程均在使用者电脑上运行。Cloudflare Pages 只托管公开展示页，不参与 PDF 解析、模型调用、任务排队或文件存储。
+下图描述的是可复现的工作流契约：相同的 PDF 指纹、固定的依赖与 OCR 配置会得到相同的本地 Markdown 和证据索引；模型只基于这些可追溯证据提出候选更新，程序校验后才写入版本。Cloudflare Pages 只托管公开展示页，不参与 PDF 解析、模型调用、任务排队或文件存储。
 
 ```mermaid
-flowchart LR
-    A[在 Streamlit 本地工作台选择多份 PDF] --> B[复制到本地队列输入目录]
-    B --> C[(jobs.sqlite3<br/>任务状态与进度)]
-    C --> D{两个本地 worker<br/>自动启动并轮询}
-    D --> E[逐份解析 PDF]
-    E --> F{原生文本可用？}
-    F -->|是| G[清洗并生成带页码 Markdown]
-    F -->|否| H[本机 Tesseract OCR]
-    H --> G
-    G --> I[提取结构化证据]
-    I --> J[使用者自己的模型密钥<br/>生成并校验 Skill 更新]
-    J --> K[更新本地 state 版本库]
-    K --> L[导出 skill-package.zip]
-    C -. 每秒读取 .-> M[工作台：当前 PDF、阶段、进度、worker、错误代码]
-    L --> M
+flowchart TD
+    A[输入：一份或多份本地 PDF] --> B[复制输入并计算 SHA-256 指纹]
+    C[运行配置：代码版本、Python 依赖、OCR 模式、模型名称] --> G
+    C --> J
+    C --> M
+    D[(本地 state：已处理指纹与当前 Skill)]
+    B --> E{指纹是否已处理？}
+    E -->|是| F[复用当前已验证版本]
+    E -->|否| G[提取原生文本]
+    G --> H{页面有有效文本？}
+    H -->|是| I[确定性清洗：Unicode、空白、重复行]
+    H -->|否| J[本机 Tesseract OCR]
+    J --> I
+    I --> K[带页码 Markdown]
+    K --> L[结构化证据：evidence ID、页码、短片段]
+    L --> M[使用者模型仅接收证据片段]
+    M --> N{程序引用、语义与结构校验}
+    N -->|通过| O[候选版本写入本地 versions]
+    O --> P[更新 current 并导出 skill-package.zip]
+    N -->|不通过| Q[保留上一个有效版本与错误代码]
+    F --> P
+    D -. 读取既有版本 .-> M
+    D <-. 保存指纹与版本 .-> O
 ```
 
-- 首次提交任务时会自动启动两个 worker。不同 `--state` 目录可并行处理；同一目录按顺序写入，避免覆盖同一套 Skill 的版本。
+- 首次提交任务时会自动启动两个 worker。不同 `--state` 目录可并行处理；同一目录按顺序写入，避免覆盖同一套 Skill 的版本。队列只负责调度与实时状态，不改变上述输入、证据和版本契约。
 - `jobs.sqlite3`、上传副本、带页码 Markdown、证据索引、版本历史和 ZIP 均留在本机。ZIP 只打包可复用的 Skill 文件，不含 PDF、密钥、路径、模型回复或本地状态。
 - 任务状态依次包括排队、解析 PDF、OCR、证据提取、模型校验、导出 ZIP、完成或失败。工作台每秒刷新，因此可以看到每篇 PDF 的当前处理阶段和总完成数量。
 - 不使用网页时，也可用 `job_cli.py submit` 提交任务、用 `job_cli.py status` 查询相同的 SQLite 状态；完整命令见 [`public-workflow/AGENTS.md`](public-workflow/AGENTS.md#后台任务与实时进度)。
