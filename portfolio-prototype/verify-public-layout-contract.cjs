@@ -8,5 +8,6 @@ assert(html.includes('function axisDate(value)'), 'date axes must use a dedicate
 assert(html.includes('axisLabel:{interval:0,hideOverlap:false,rotate:'), 'weekly line charts must show every trading date');
 assert(html.includes('grid:{left:164,right:50,top:50,bottom:46}'), 'comparison charts need a wider node-label column');
 assert(html.includes('edgeLabel:{show:true'), 'industry relations must be labelled on graph arrows');
+assert(html.includes('blob/main/public-workflow/AGENTS.md'), 'the public workbench must link agents to the execution runbook');
 
 console.log('PASS: public layout follows the requested report and graph display contract.');

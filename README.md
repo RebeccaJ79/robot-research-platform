@@ -28,6 +28,8 @@
 
 Markdown 与证据索引仅保存在使用者的本地 `--state` 目录，不写入 ZIP；扫描 PDF 需要本机安装 Tesseract。详情、安装、真实端点 smoke test 与故障排查见 [`public-workflow/README.md`](public-workflow/README.md)。
 
+Codex、Hermes 等本地 agent 可遵循 [`public-workflow/AGENTS.md`](public-workflow/AGENTS.md) 的执行契约，使用同一命令行入口生成 ZIP。
+
 ## 本地运行
 
 ```powershell
