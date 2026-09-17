@@ -32,6 +32,33 @@ Codex、Hermes 等本地 agent 可遵循 [`public-workflow/AGENTS.md`](public-wo
 
 本地工作台会自动启动两个本地 worker，并实时显示每份 PDF 的解析、OCR、证据、模型校验和 ZIP 导出进度；worker 与任务状态均保存在使用者电脑的本地队列中。
 
+### 本地工作台流程
+
+下图中的所有数据和进程均在使用者电脑上运行。Cloudflare Pages 只托管公开展示页，不参与 PDF 解析、模型调用、任务排队或文件存储。
+
+```mermaid
+flowchart LR
+    A[在 Streamlit 本地工作台选择多份 PDF] --> B[复制到本地队列输入目录]
+    B --> C[(jobs.sqlite3<br/>任务状态与进度)]
+    C --> D{两个本地 worker<br/>自动启动并轮询}
+    D --> E[逐份解析 PDF]
+    E --> F{原生文本可用？}
+    F -->|是| G[清洗并生成带页码 Markdown]
+    F -->|否| H[本机 Tesseract OCR]
+    H --> G
+    G --> I[提取结构化证据]
+    I --> J[使用者自己的模型密钥<br/>生成并校验 Skill 更新]
+    J --> K[更新本地 state 版本库]
+    K --> L[导出 skill-package.zip]
+    C -. 每秒读取 .-> M[工作台：当前 PDF、阶段、进度、worker、错误代码]
+    L --> M
+```
+
+- 首次提交任务时会自动启动两个 worker。不同 `--state` 目录可并行处理；同一目录按顺序写入，避免覆盖同一套 Skill 的版本。
+- `jobs.sqlite3`、上传副本、带页码 Markdown、证据索引、版本历史和 ZIP 均留在本机。ZIP 只打包可复用的 Skill 文件，不含 PDF、密钥、路径、模型回复或本地状态。
+- 任务状态依次包括排队、解析 PDF、OCR、证据提取、模型校验、导出 ZIP、完成或失败。工作台每秒刷新，因此可以看到每篇 PDF 的当前处理阶段和总完成数量。
+- 不使用网页时，也可用 `job_cli.py submit` 提交任务、用 `job_cli.py status` 查询相同的 SQLite 状态；完整命令见 [`public-workflow/AGENTS.md`](public-workflow/AGENTS.md#后台任务与实时进度)。
+
 ## 本地运行
 
 ```powershell
