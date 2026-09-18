@@ -72,9 +72,10 @@ flowchart TD
 ```powershell
 git clone https://github.com/RebeccaJ79/robot-research-platform.git
 cd robot-research-platform/public-workflow
-python -m pip install -r requirements.txt
-streamlit run local_workbench.py
-python skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run local_workbench.py
+.\.venv\Scripts\python.exe skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
 ```
 
 去掉 `--offline-updates` 后，需在本机环境设置 `MODEL_API_KEY`、`MODEL_BASE_URL`，以及可选的 `MODEL_NAME`；也可直接使用 `DEEPSEEK_API_KEY`、可选 `DEEPSEEK_BASE_URL` 和 `DEEPSEEK_MODEL`。密钥仅发送给使用者配置的模型端点，费用由使用者承担。
@@ -83,7 +84,7 @@ python skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-st
 
 ```powershell
 cd public-workflow
-python -m pytest tests -q
+.\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
 测试覆盖增量更新、重复 PDF 去重、固定六父维度、无效候选版本回滚、敏感内容阻断和 ZIP 目录结构。

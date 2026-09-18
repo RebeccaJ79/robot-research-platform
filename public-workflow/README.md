@@ -13,14 +13,15 @@
 安装依赖：
 
 ```powershell
-python -m pip install -r requirements.txt
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 启动本地网页工作台：
 
 ```powershell
 # 已在 PowerShell 配置 DeepSeek 时无需重复设置密钥
-streamlit run local_workbench.py
+.\.venv\Scripts\python.exe -m streamlit run local_workbench.py
 ```
 
 浏览器会打开本地地址。上传的 PDF 只交给本机程序处理；本地工作台复用下方同一套命令行生成核心。
@@ -34,7 +35,7 @@ OCR 仅在本机执行。除 Python 依赖外，请安装 [Tesseract OCR](https:
 使用用户自己的 PDF 和离线样例更新运行：
 
 ```powershell
-python skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
+.\.venv\Scripts\python.exe skill_cli.py --pdf .\report-a.pdf --pdf .\report-b.pdf --state .\local-state --output .\skill-package.zip --offline-updates .\sample-data\skill-updates.json
 ```
 
 不提供 `--offline-updates` 时，程序优先读取 `MODEL_API_KEY`、`MODEL_BASE_URL` 和可选的 `MODEL_NAME`，也兼容 DeepSeek 的 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL` 和 `DEEPSEEK_MODEL`。它调用使用者配置的 OpenAI 兼容端点；`.env.example` 仅为变量名模板，程序不会自动读取 `.env` 文件。模型费用由使用者承担。
@@ -45,14 +46,14 @@ PowerShell 示例：
 $env:MODEL_API_KEY = "你的密钥"
 $env:MODEL_BASE_URL = "https://你的模型服务/v1"
 $env:MODEL_NAME = "你的模型名称"
-python skill_cli.py --pdf .\report-a.pdf --state .\local-state --output .\skill-package.zip
+.\.venv\Scripts\python.exe skill_cli.py --pdf .\report-a.pdf --state .\local-state --output .\skill-package.zip
 ```
 
 已配置 DeepSeek 的 PowerShell 可直接运行网页工作台或上述命令。若只设置了密钥，默认使用 `https://api.deepseek.com/v1` 与 `deepseek-chat`：
 
 ```powershell
 $env:DEEPSEEK_API_KEY = "你的 DeepSeek 密钥"
-streamlit run local_workbench.py
+.\.venv\Scripts\python.exe -m streamlit run local_workbench.py
 ```
 
 `--ocr auto` 为默认值：先提取 PDF 原生文本，空文本时在本机 OCR；`--ocr force` 始终 OCR；`--ocr off` 禁止 OCR 并在扫描件上失败。
