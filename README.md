@@ -1,6 +1,6 @@
 # robot-research-platform
 
-机器人产业研究的公开展示平台与可复用本地工作流样例。
+产业研究的公开展示平台与可复用本地工作流样例。
 
 - 公开网站：[robot-research-platform.pages.dev](https://robot-research-platform.pages.dev/)
 - 在线内容仅展示已发布的脱敏成果；不调用模型、后台 API 或 Worker。
